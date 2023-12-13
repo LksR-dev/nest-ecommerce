@@ -1,0 +1,12 @@
+import { UserM } from '../models/user';
+
+export interface UserRepository {
+  insert(user: UserM): Promise<UserM>;
+  update(id: string, user: UserM): Promise<void>;
+  findById(id: string): Promise<UserM>;
+  findOrCreate(
+    searchBy: 'email' | 'id',
+    userData: UserM,
+  ): Promise<{ user: UserM; userFounded: boolean }>;
+  deleteById(id: string): Promise<void>;
+}
