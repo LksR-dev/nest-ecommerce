@@ -25,7 +25,7 @@ export class LoginUseCases {
     if (!authValidated) throw new Error('The code is invalid or expired.');
     const userId = authFounded.user.id;
     const payload: IJwtServicePayload = { userId };
-    const secret = this.jwtConfig.getJwtRefreshSecret();
+    const secret = this.jwtConfig.getJwtSecret();
     const expiresIn = this.jwtConfig.getJwtExpirationTime() + 's';
     const token = this.jwtTokenService.createToken(payload, secret, expiresIn);
     this.logger.log(

@@ -11,8 +11,6 @@ interface EnvironmentVariables {
   DATABASE_NAME: string;
   JWT_SECRET: string;
   JWT_EXPIRATION_TIME: string;
-  JWT_REFRESH_TOKEN_SECRET: string;
-  JWT_REFRESH_TOKEN_EXPIRATION_TIME: string;
   SENGRID_API_KEY: string;
   SENGRID_SENDER_EMAIL: string;
 }
@@ -22,12 +20,6 @@ export class EnvironmentConfigService implements DatabaseConfig, JWTConfig {
   constructor(private configService: ConfigService<EnvironmentVariables>) {}
   getJwtExpirationTime(): string {
     return this.configService.get<string>('JWT_EXPIRATION_TIME');
-  }
-  getJwtRefreshSecret(): string {
-    return this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET');
-  }
-  getJwtRefreshExpirationTime(): string {
-    return this.configService.get<string>('JWT_REFRESH_TOKEN_EXPIRATION_TIME');
   }
   getJwtSecret(): string {
     return this.configService.get<string>('JWT_SECRET');

@@ -8,7 +8,6 @@ export class EmailService {
     private readonly configService: EnvironmentConfigService,
     private readonly mailService: MailService,
   ) {
-    console.log('SendGrid API Key:', this.configService.getSengridAPIKey());
     this.mailService.setApiKey(this.configService.getSengridAPIKey());
   }
 
