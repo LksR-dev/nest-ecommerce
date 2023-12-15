@@ -6,9 +6,17 @@ services:
     container_name: codrr_pg
     restart: always
     environment:
-      POSTGRES_DB: ecommerce-market
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Lucas66R99
+      DATABASE_NAME: ecommerce-market
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: Lucas66R99
+      DATABASE_PORT: 5432
+      DATABASE_HOST: localhost
+      DATABASE_SCHEMA: public
+      JWT_SECRET: 74YLbq4%c!wUsd
+      JWT_EXPIRATION_TIME: 1800
+      JWT_REFRESH_TOKEN_SECRET: 7jML9q4-c!s0f1x
+      SENGRID_API_KEY: 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
+      SENGRID_SENDER_EMAIL: lucasmruiz05@gmail.com
     volumes:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
