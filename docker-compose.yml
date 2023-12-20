@@ -17,7 +17,7 @@ services:
   database:
     image: postgres:9.6-alpine
     ports:
-      - 5432:5432
+      - nestjs_api:5432
     environment:
       - DATABASE_HOST=${DATABASE_HOST}
       - DATABASE_PORT=${DATABASE_PORT}
