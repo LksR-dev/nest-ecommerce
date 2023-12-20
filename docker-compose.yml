@@ -4,7 +4,6 @@ services:
   backend:
     build: ./
     container_name: nestjs_api
-    dockerfile: Dockerfile
     env_file:
       - ./env/local.env
       - ./env/.env
