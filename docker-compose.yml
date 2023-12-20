@@ -5,7 +5,8 @@ services:
     build: ./
     container_name: nestjs_api
     env_file:
-      - .env
+      - ./env/local.env
+      - ./env/.env
     depends_on:
       - database
     networks:
