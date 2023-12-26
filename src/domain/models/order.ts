@@ -1,11 +1,11 @@
 import { ProductM } from './product';
+import { UserM } from './user';
 
-export class UserM {
+export class OrderM {
   id: string;
-  name: string;
-  lastname: string;
-  email: string;
   product: ProductM[];
+  user: UserM;
+  status: string;
   createddate: Date;
   updateddate: Date;
 }
