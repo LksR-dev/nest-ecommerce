@@ -3,7 +3,7 @@ import { UserM } from './user';
 
 export class OrderM {
   id: string;
-  product: ProductM[];
+  products: ProductM[];
   user: UserM;
   status: string;
   createddate: Date;
