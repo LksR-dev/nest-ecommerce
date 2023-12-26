@@ -21,8 +21,7 @@ export class DatabaseUserRepository implements UserRepository {
   }
 
   async findById(id: string): Promise<UserM> {
-    const userEntity = await this.userEntityRepository.findOneByOrFail({ id });
-    return userEntity;
+    return await this.userEntityRepository.findOneByOrFail({ id });
   }
 
   async findOrCreate(

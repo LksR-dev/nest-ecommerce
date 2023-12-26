@@ -6,6 +6,7 @@ import {
   OneToOne,
   JoinColumn,
   ManyToOne,
+  Column,
 } from 'typeorm';
 import { User } from './user.entity';
 import { Product } from './product_entity';
@@ -30,7 +31,10 @@ export class Order {
       cascade: true,
     },
   )
-  productsData: Product[];
+  products: Product[];
+
+  @Column()
+  status: string;
 
   @CreateDateColumn({ name: 'createdate' })
   createddate: Date;
