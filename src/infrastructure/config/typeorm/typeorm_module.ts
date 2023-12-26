@@ -4,6 +4,8 @@ import { EnvironmentConfigModule } from '../environment-config/environment_confi
 import { EnvironmentConfigService } from '../environment-config/environment_config_service';
 import { User } from 'src/infrastructure/entities/user.entity';
 import { Auth } from 'src/infrastructure/entities/auth-entity';
+import { Product } from 'src/infrastructure/entities/product_entity';
+import { Order } from 'src/infrastructure/entities/order_entity';
 
 export const getTypeOrmModuleOptions = (
   config: EnvironmentConfigService,
@@ -15,7 +17,7 @@ export const getTypeOrmModuleOptions = (
     username: config.getDatabaseUser(),
     password: config.getDatabasePassword(),
     database: config.getDatabaseName(),
-    entities: [User, Auth],
+    entities: [User, Auth, Product, Order],
     schema: process.env.DATABASE_SCHEMA,
     migrationsRun: true,
     migrations: ['dist/migrations/**/*.ts'],

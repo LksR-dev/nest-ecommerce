@@ -1,6 +1,8 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { Auth } from 'src/infrastructure/entities/auth-entity';
+import { Product } from 'src/infrastructure/entities/product_entity';
 import { User } from 'src/infrastructure/entities/user.entity';
+import { Order } from 'src/infrastructure/entities/order_entity';
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
   type: 'postgres',
@@ -9,7 +11,7 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   username: process.env.DATABASE_USER,
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
-  entities: [User, Auth],
+  entities: [User, Auth, Product, Order],
   synchronize: process.env.NODE_ENV !== 'production',
   logging: true,
 };
