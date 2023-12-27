@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { AuthM } from 'src/domain/models/auth';
-import { User } from 'src/infrastructure/entities/user.entity';
+import { User } from 'src/infrastructure/entities/user_entity';
 
 export class AuthPresenter {
   @ApiProperty()
