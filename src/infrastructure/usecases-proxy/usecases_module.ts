@@ -16,19 +16,22 @@ import { AddUserCases } from 'src/usecases/user/addUser_usecases';
 import { LoginUseCases } from 'src/usecases/auth/login_usecase';
 import { LogoutUseCases } from 'src/usecases/auth/logout_usecase';
 import { UseCaseProxy } from './usecases_proxy';
+import { GetProductUsecases } from 'src/usecases/product/getProduct_usecases';
+import { GetProductsUsecases } from 'src/usecases/product/getProducts_usecases';
 
 // Modules
-import { ExceptionsModule } from '../exceptions/exceptions.module';
-import { LoggerModule } from '../logger/logger.module';
+import { ExceptionsModule } from '../exceptions/exceptions_module';
+import { LoggerModule } from '../logger/logger_module';
 import { EnvironmentConfigModule } from '../config/environment-config/environment_config_module';
 import { RepositoriesModule } from '../repositories/repositories_module';
 import { SengridModule } from '../common/sengrid/sengrid_module';
 import { JwtModule } from '../services/jwt/jwt_module';
 
 // Services
-import { LoggerService } from '../logger/logger.service';
+import { LoggerService } from '../logger/logger_service';
 import { EmailService } from '../common/sengrid/sengrid_service';
 import { EnvironmentConfigService } from '../config/environment-config/environment_config_service';
+import { DatabaseProductRepository } from '../repositories/product_repository';
 
 @Module({
   imports: [
@@ -49,6 +52,10 @@ export class UsecasesProxyModule {
   // Login
   static LOGIN_USECASES_PROXY = 'postLoginUseCasesProxy';
   static LOGOUT_USECASES_PROXY = 'postLogoutUseCasesProxy';
+
+  // Product
+  static GET_PRODUCT_USECASES_PROXY = 'getProductUseCasesProxy';
+  static GET_PRODUCTS_USECASES_PROXY = 'getProductsUseCasesProxy';
 
   static register(): DynamicModule {
     return {
@@ -126,12 +133,31 @@ export class UsecasesProxyModule {
           provide: UsecasesProxyModule.LOGOUT_USECASES_PROXY,
           useFactory: () => new UseCaseProxy(new LogoutUseCases()),
         },
+        // PRODUCT
+        {
+          inject: [DatabaseProductRepository, LoggerService],
+          provide: UsecasesProxyModule.GET_PRODUCT_USECASES_PROXY,
+          useFactory: (
+            productRepo: DatabaseProductRepository,
+            logger: LoggerService,
+          ) => new UseCaseProxy(new GetProductUsecases(productRepo, logger)),
+        },
+        {
+          inject: [DatabaseProductRepository, LoggerService],
+          provide: UsecasesProxyModule.GET_PRODUCTS_USECASES_PROXY,
+          useFactory: (
+            productRepo: DatabaseProductRepository,
+            logger: LoggerService,
+          ) => new UseCaseProxy(new GetProductsUsecases(productRepo, logger)),
+        },
       ],
       exports: [
         UsecasesProxyModule.GET_USER_USECASES_PROXY,
         UsecasesProxyModule.POST_USER_USECASES_PROXY,
         UsecasesProxyModule.LOGIN_USECASES_PROXY,
         UsecasesProxyModule.LOGOUT_USECASES_PROXY,
+        UsecasesProxyModule.GET_PRODUCT_USECASES_PROXY,
+        UsecasesProxyModule.GET_PRODUCTS_USECASES_PROXY,
       ],
     };
   }
