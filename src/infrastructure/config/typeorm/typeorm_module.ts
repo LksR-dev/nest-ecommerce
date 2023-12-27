@@ -2,8 +2,8 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { EnvironmentConfigModule } from '../environment-config/environment_config_module';
 import { EnvironmentConfigService } from '../environment-config/environment_config_service';
-import { User } from 'src/infrastructure/entities/user.entity';
-import { Auth } from 'src/infrastructure/entities/auth-entity';
+import { User } from 'src/infrastructure/entities/user_entity';
+import { Auth } from 'src/infrastructure/entities/auth_entity';
 import { Product } from 'src/infrastructure/entities/product_entity';
 import { Order } from 'src/infrastructure/entities/order_entity';
 

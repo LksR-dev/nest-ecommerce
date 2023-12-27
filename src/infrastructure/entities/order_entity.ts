@@ -8,7 +8,7 @@ import {
   ManyToOne,
   Column,
 } from 'typeorm';
-import { User } from './user.entity';
+import { User } from './user_entity';
 import { Product } from './product_entity';
 
 @Entity()

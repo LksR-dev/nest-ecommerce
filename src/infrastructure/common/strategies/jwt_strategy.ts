@@ -5,8 +5,8 @@ import { Request } from 'express';
 import { UsecasesProxyModule } from 'src/infrastructure/usecases-proxy/usecases_module';
 import { UseCaseProxy } from 'src/infrastructure/usecases-proxy/usecases_proxy';
 import { LoginUseCases } from 'src/usecases/auth/login_usecase';
-import { ExceptionsService } from '../../exceptions/exceptions.service';
-import { LoggerService } from '../../logger/logger.service';
+import { ExceptionsService } from '../../exceptions/exceptions_service';
+import { LoggerService } from '../../logger/logger_service';
 import { TokenPayload } from 'src/domain/models/auth';
 
 @Injectable()

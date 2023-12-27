@@ -21,4 +21,7 @@ export class DatabaseProductRepository implements ProductRepository {
   async update(id: string, productData: Partial<ProductM>): Promise<void> {
     await this.productRepository.update({ id }, productData);
   }
+  async getAll(): Promise<[products: ProductM[], count: number]> {
+    return await this.productRepository.findAndCount();
+  }
 }
