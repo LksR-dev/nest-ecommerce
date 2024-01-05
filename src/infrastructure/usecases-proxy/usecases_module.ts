@@ -2,7 +2,7 @@ import { DynamicModule, Module } from '@nestjs/common';
 
 // Repositories
 import { DatabaseUserRepository } from 'src/infrastructure/repositories/user_repository';
-import { DatabaseAuthRepository } from '../repositories/auth_repository';
+import { DatabaseAuthRepository } from 'src/infrastructure/repositories/auth_repository';
 
 // Services
 import { ServicesModule } from '../services/services_module';
@@ -32,6 +32,7 @@ import { LoggerService } from '../logger/logger_service';
 import { EmailService } from '../common/sengrid/sengrid_service';
 import { EnvironmentConfigService } from '../config/environment-config/environment_config_service';
 import { DatabaseProductRepository } from '../repositories/product_repository';
+import { GetAllUsersCases } from 'src/usecases/user/getAllUsers_usecases';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { DatabaseProductRepository } from '../repositories/product_repository';
 export class UsecasesProxyModule {
   // User
   static GET_USER_USECASES_PROXY = 'getUserUsecasesProxy';
+  static GET_ALL_USER_USECASES_PROXY = 'getAllUserUsecasesProxy';
   static POST_USER_USECASES_PROXY = 'postUserUsecasesProxy';
 
   // Login
@@ -66,6 +68,16 @@ export class UsecasesProxyModule {
           provide: UsecasesProxyModule.GET_USER_USECASES_PROXY,
           useFactory: (userRepository: DatabaseUserRepository) =>
             new UseCaseProxy(new GetUserCases(userRepository)),
+        },
+        {
+          inject: [LoggerService, DatabaseUserRepository],
+          provide: UsecasesProxyModule.GET_ALL_USER_USECASES_PROXY,
+          useFactory: (
+            logger: LoggerService,
+            userRepository: DatabaseUserRepository,
+          ) => {
+            new UseCaseProxy(new GetAllUsersCases(logger, userRepository));
+          },
         },
         // ADD USER AND AUTH
         {
@@ -153,6 +165,7 @@ export class UsecasesProxyModule {
       ],
       exports: [
         UsecasesProxyModule.GET_USER_USECASES_PROXY,
+        UsecasesProxyModule.GET_ALL_USER_USECASES_PROXY,
         UsecasesProxyModule.POST_USER_USECASES_PROXY,
         UsecasesProxyModule.LOGIN_USECASES_PROXY,
         UsecasesProxyModule.LOGOUT_USECASES_PROXY,
