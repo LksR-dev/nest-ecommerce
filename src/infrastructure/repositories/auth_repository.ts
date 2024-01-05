@@ -12,7 +12,7 @@ export class DatabaseAuthRepository implements AuthRepository {
     private readonly authEntityRepository: Repository<Auth>,
   ) {}
 
-  async upsert(auth: AuthM, searchBy: string): Promise<AuthM> {
+  async upsert(auth: AuthM, searchBy: Partial<keyof AuthM>): Promise<AuthM> {
     const result = (await this.authEntityRepository.upsert(auth, [searchBy]))
       .raw[0];
     return result;

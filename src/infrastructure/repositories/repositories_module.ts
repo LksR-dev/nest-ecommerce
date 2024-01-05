@@ -9,6 +9,9 @@ import { Order } from '../entities/order_entity';
 import { Product } from '../entities/product_entity';
 import { DatabaseOrderRepository } from './order_repository';
 import { DatabaseProductRepository } from './product_repository';
+import { DatabaseAWSRepository } from './aws_repository';
+import { EnvironmentConfigService } from '../config/environment-config/environment_config_service';
+import { LoggerService } from '../logger/logger_service';
 
 @Module({
   imports: [
@@ -20,12 +23,16 @@ import { DatabaseProductRepository } from './product_repository';
     DatabaseAuthRepository,
     DatabaseOrderRepository,
     DatabaseProductRepository,
+    DatabaseAWSRepository,
+    EnvironmentConfigService,
+    LoggerService,
   ],
   exports: [
     DatabaseUserRepository,
     DatabaseAuthRepository,
     DatabaseOrderRepository,
     DatabaseProductRepository,
+    DatabaseAWSRepository,
   ],
 })
 export class RepositoriesModule {}

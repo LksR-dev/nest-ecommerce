@@ -25,7 +25,7 @@ export class DatabaseUserRepository implements UserRepository {
   }
 
   async findOrCreate(
-    searchBy: 'email' | 'id',
+    searchBy: Partial<keyof UserM>,
     userData: UserM,
   ): Promise<{ user: UserM; userFounded: boolean }> {
     const user = await this.userEntityRepository.findOne({
@@ -41,14 +41,4 @@ export class DatabaseUserRepository implements UserRepository {
   async deleteById(id: string): Promise<void> {
     await this.userEntityRepository.delete({ id });
   }
-
-  // private userEntity(user: UserM): User {
-  //   const userEntity = new User();
-  //   userEntity.id = user.id
-  //   userEntity.email = user.email;
-  //   userEntity.name = user.name;
-  //   userEntity.lastname = user.lastname;
-  //   user
-  //   return userEntity;
-  // }
 }

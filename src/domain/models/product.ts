@@ -5,8 +5,9 @@ export class ProductM {
   title: string;
   price: number;
   description: string;
-  images: string;
+  images: string[];
   user: UserM;
+  unable: boolean;
   createddate: Date;
   updateddate: Date;
 }

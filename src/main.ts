@@ -1,6 +1,8 @@
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import cookieParser from 'cookie-parser';
+
 import { AppModule } from './app_module';
 
 import { AllExceptionFilter } from './infrastructure/common/filter/exception_filter';
@@ -25,6 +27,8 @@ async function bootstrap() {
   app.useGlobalInterceptors(new LoggingInterceptor(new LoggerService()));
   app.useGlobalInterceptors(new ResponseInterceptor());
 
+  app.enableCors();
+  app.use(cookieParser());
   //Swagger config
   if (env !== 'production') {
     const config = new DocumentBuilder()

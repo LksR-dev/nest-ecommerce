@@ -5,7 +5,7 @@ export interface UserRepository {
   update(id: string, user: UserM): Promise<void>;
   findById(id: string): Promise<UserM>;
   findOrCreate(
-    searchBy: 'email' | 'id',
+    searchBy: Partial<keyof UserM>,
     userData: UserM,
   ): Promise<{ user: UserM; userFounded: boolean }>;
   deleteById(id: string): Promise<void>;

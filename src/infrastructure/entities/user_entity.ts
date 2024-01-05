@@ -25,6 +25,12 @@ export class User {
   @OneToMany(() => Product, (product) => product.id)
   product: Product[];
 
+  @Column('boolean', { default: false })
+  unable: boolean;
+
+  @Column('varchar')
+  role: 'admin' | 'user';
+
   @CreateDateColumn({ name: 'createdate' })
   createddate: Date;
 

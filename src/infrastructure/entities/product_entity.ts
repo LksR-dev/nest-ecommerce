@@ -22,11 +22,14 @@ export class Product {
   @Column('text')
   description: string;
 
-  @Column('varchar')
-  images: string;
+  @Column('varchar', { array: true })
+  images: string[];
 
   @ManyToOne(() => User, (user) => user.product)
   user: User;
+
+  @Column('boolean', { default: false })
+  unable: boolean;
 
   @CreateDateColumn({ name: 'createdate' })
   createddate: Date;

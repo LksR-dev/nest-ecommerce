@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { UserM } from 'src/domain/models/user';
 import { IUserService } from 'src/domain/services/user_service';
+import { EnvironmentConfigService } from 'src/infrastructure/config/environment-config/environment_config_service';
 
 @Injectable()
 export class UserService implements IUserService {
+  constructor(private readonly environmentConfig: EnvironmentConfigService) {}
+
   createUser(userData: {
     email: string;
     name?: string;
@@ -14,6 +17,12 @@ export class UserService implements IUserService {
     user.email = email;
     user.name = name;
     user.lastname = lastname;
+    if (email === this.environmentConfig.getAdminEmail()) {
+      user.role = 'admin';
+    } else {
+      user.role = 'user';
+    }
+
     return user;
   }
 }

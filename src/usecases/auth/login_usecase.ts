@@ -18,7 +18,10 @@ export class LoginUseCases {
     private readonly userRepository: UserRepository,
   ) {}
 
-  async getCookieWithJwtToken(loginData: { email: string; code: string }) {
+  async getCookieWithJwtToken(loginData: {
+    email: string;
+    code: string;
+  }): Promise<{ token: string; expirationTime: number }> {
     const { email, code } = loginData;
     const authFounded = await this.authRepository.findByEmail(email);
     const authValidated = this.authService.verifyCode(authFounded, code);
@@ -32,7 +35,11 @@ export class LoginUseCases {
       'LoginUseCases getCookieWithJwtToken',
       `The user ${userId} have been logged`,
     );
-    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.jwtConfig.getJwtExpirationTime()}`;
+    return {
+      token,
+      expirationTime: Number(this.jwtConfig.getJwtExpirationTime()),
+    };
+    // return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.jwtConfig.getJwtExpirationTime()}`;
   }
 
   async validateUserForJWTStragtegy(userId: string) {

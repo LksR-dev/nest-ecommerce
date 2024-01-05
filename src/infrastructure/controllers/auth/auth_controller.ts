@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Inject,
-  Post,
-  Body,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Inject, Post, Body, UseGuards, Res } from '@nestjs/common';
 import {
   ApiExtraModels,
   ApiOperation,
@@ -20,11 +13,12 @@ import { AuthPresenter } from './auth_presenter';
 import { LoginUseCases } from 'src/usecases/auth/login_usecase';
 import { JwtAuthGuard } from 'src/infrastructure/common/guards/jwt_guard';
 import { LogoutUseCases } from 'src/usecases/auth/logout_usecase';
+import { Response } from 'express';
 
 @Controller('auth')
 @ApiTags('auth')
 @ApiResponse({ status: 500, description: 'Internal error' })
-@ApiExtraModels()
+@ApiExtraModels(AuthPresenter)
 export class AuthController {
   constructor(
     @Inject(UsecasesProxyModule.LOGIN_USECASES_PROXY)
@@ -35,21 +29,29 @@ export class AuthController {
 
   @Post('login')
   @ApiResponseType(AuthPresenter, false)
-  async createAuth(@Body() addAuthDTO: LoginDTO, @Request() request: any) {
-    const accessTokenCookie = await this.loginUsecaseProxy
+  @ApiOperation({ description: 'login' })
+  async createAuth(
+    @Body() addAuthDTO: LoginDTO,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const { token, expirationTime } = await this.loginUsecaseProxy
       .getInstance()
       .getCookieWithJwtToken(addAuthDTO);
-    request.res.setHeader('Set-Cookie', [accessTokenCookie]);
-    console.log(accessTokenCookie);
+
+    response.cookie('Authorization', token, {
+      maxAge: expirationTime,
+      httpOnly: true,
+      path: '/',
+    });
+    console.log(token);
     return 'Login successful';
   }
 
   @Post('logout')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ description: 'logout' })
-  async logout(@Request() request: any) {
-    const cookie = await this.logoutUsecaseProxy.getInstance().execute();
-    request.res.setHeader('Set-Cookie', [cookie]);
+  async logout(@Res() response: Response) {
+    response.cookie('Authorization', '', { maxAge: 0 });
     return 'Logout successful';
   }
 }
