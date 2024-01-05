@@ -13,6 +13,8 @@ export class UserPresenter {
   @ApiProperty()
   email: string;
   @ApiProperty()
+  role: string;
+  @ApiProperty()
   codeExpires: Date;
   @ApiProperty()
   createdate: Date;
@@ -24,6 +26,7 @@ export class UserPresenter {
     this.name = user.name;
     this.lastname = user.lastname;
     this.email = user.email;
+    this.role = user.role;
     this.createdate = user.createddate;
     this.updateddate = user.updateddate;
   }

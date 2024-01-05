@@ -12,7 +12,7 @@ export class ProductPresenter {
   @ApiProperty()
   description: string;
   @ApiProperty()
-  images: string;
+  images: string[];
   @ApiProperty()
   user: UserM;
   @ApiProperty()
