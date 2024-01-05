@@ -16,7 +16,7 @@ import { JwtStrategy } from './infrastructure/common/strategies/jwt_strategy';
   imports: [
     PassportModule,
     JwtModule.register({
-      secret: process.env.secret,
+      secret: process.env.JWT_SECRET,
     }),
     JwtServiceModule,
     EnvironmentConfigModule,
