@@ -1,4 +1,8 @@
 export interface IAWSService {
-  sendEmail(toAddresses: string[], subject: string, body: string);
+  sendEmail(
+    toAddresses: string[],
+    code: string,
+    bodyType: 'login' | 'recoverPassword',
+  );
   uploadImages(images: string[]);
 }
