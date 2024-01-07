@@ -9,4 +9,5 @@ export interface UserRepository {
     userData: UserM,
   ): Promise<{ user: UserM; userFounded: boolean }>;
   deleteById(id: string): Promise<void>;
+  getAll(): Promise<UserM[]>;
 }

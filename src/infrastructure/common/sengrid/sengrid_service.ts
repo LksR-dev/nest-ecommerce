@@ -8,6 +8,7 @@ export class EmailService {
     private readonly configService: EnvironmentConfigService,
     private readonly mailService: MailService,
   ) {
+    this.mailService = new MailService();
     this.mailService.setApiKey(this.configService.getSengridAPIKey());
   }
 

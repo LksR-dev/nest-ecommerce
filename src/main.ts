@@ -12,6 +12,7 @@ import {
   ResponseFormat,
   ResponseInterceptor,
 } from './infrastructure/common/interceptors/response_interceptor';
+import { json, urlencoded } from 'express';
 
 async function bootstrap() {
   const env = process.env.NODE_ENV;
@@ -29,6 +30,8 @@ async function bootstrap() {
 
   app.enableCors();
   app.use(cookieParser());
+  app.use(json({ limit: '50mb' }));
+  app.use(urlencoded({ extended: true, limit: '50mb' }));
   //Swagger config
   if (env !== 'production') {
     const config = new DocumentBuilder()

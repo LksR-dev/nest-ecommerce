@@ -10,7 +10,10 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   port: parseInt(process.env.DATABASE_PORT, 10) || 5432,
   username: process.env.DATABASE_USER,
   password: process.env.DATABASE_PASSWORD,
-  database: process.env.DATABASE_NAME,
+  database:
+    process.env.NODE_ENV === 'test'
+      ? process.env.DATABASE_NAME_TEST
+      : process.env.DATABASE_NAME,
   entities: [User, Auth, Product, Order],
   synchronize: process.env.NODE_ENV !== 'production',
   logging: true,

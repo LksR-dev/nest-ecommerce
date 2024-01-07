@@ -5,6 +5,7 @@ import { UserRepository } from 'src/domain/repositories/user_repository';
 import { IAuthService } from 'src/domain/services/auth_service';
 import { IUserService } from 'src/domain/services/user_service';
 import { IEmailService } from 'src/domain/services/email_service';
+import { IAWSService } from 'src/domain/services/aws_service';
 
 export class AddUserCases {
   constructor(
@@ -14,6 +15,7 @@ export class AddUserCases {
     private readonly authRepository: AuthRepository,
     private readonly authService: IAuthService,
     private readonly emailService: IEmailService,
+    private readonly awsService: IAWSService,
   ) {}
 
   async execute(userData: { email: string }): Promise<UserM> {
@@ -36,6 +38,7 @@ export class AddUserCases {
       });
       await this.authRepository.upsert(auth, 'email');
     }
+    // await this.awsService.sendEmail([email], code, 'login');
     await this.emailService.sendCodeEmail(email, code);
     this.logger.log(
       'UserService.createUser executed',

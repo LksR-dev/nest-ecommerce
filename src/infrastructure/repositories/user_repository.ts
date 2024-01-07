@@ -41,4 +41,8 @@ export class DatabaseUserRepository implements UserRepository {
   async deleteById(id: string): Promise<void> {
     await this.userEntityRepository.delete({ id });
   }
+
+  async getAll(): Promise<UserM[]> {
+    return await this.userEntityRepository.find();
+  }
 }

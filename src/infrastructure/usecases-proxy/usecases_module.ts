@@ -12,12 +12,14 @@ import { JwtTokenService } from '../services/jwt/jwt_service';
 
 // Use cases
 import { GetUserCases } from 'src/usecases/user/getUser_usecases';
+import { GetUsersCases } from 'src/usecases/user/getAllUsers_usecases';
 import { AddUserCases } from 'src/usecases/user/addUser_usecases';
 import { LoginUseCases } from 'src/usecases/auth/login_usecase';
 import { LogoutUseCases } from 'src/usecases/auth/logout_usecase';
 import { UseCaseProxy } from './usecases_proxy';
 import { GetProductUsecases } from 'src/usecases/product/getProduct_usecases';
 import { GetProductsUsecases } from 'src/usecases/product/getProducts_usecases';
+import { AddProductUsecases } from 'src/usecases/product/addProduct_usecases';
 
 // Modules
 import { ExceptionsModule } from '../exceptions/exceptions_module';
@@ -32,7 +34,7 @@ import { LoggerService } from '../logger/logger_service';
 import { EmailService } from '../common/sengrid/sengrid_service';
 import { EnvironmentConfigService } from '../config/environment-config/environment_config_service';
 import { DatabaseProductRepository } from '../repositories/product_repository';
-import { GetAllUsersCases } from 'src/usecases/user/getAllUsers_usecases';
+import { AWSService } from '../services/aws/aws_service';
 
 @Module({
   imports: [
@@ -48,7 +50,7 @@ import { GetAllUsersCases } from 'src/usecases/user/getAllUsers_usecases';
 export class UsecasesProxyModule {
   // User
   static GET_USER_USECASES_PROXY = 'getUserUsecasesProxy';
-  static GET_ALL_USER_USECASES_PROXY = 'getAllUserUsecasesProxy';
+  static GET_USERS_USECASES_PROXY = 'getUsersUsecasesProxy';
   static POST_USER_USECASES_PROXY = 'postUserUsecasesProxy';
 
   // Login
@@ -58,6 +60,7 @@ export class UsecasesProxyModule {
   // Product
   static GET_PRODUCT_USECASES_PROXY = 'getProductUseCasesProxy';
   static GET_PRODUCTS_USECASES_PROXY = 'getProductsUseCasesProxy';
+  static ADD_PRODUCTS_USECASES_PROXY = 'addProductUsecasesProxy';
 
   static register(): DynamicModule {
     return {
@@ -71,13 +74,11 @@ export class UsecasesProxyModule {
         },
         {
           inject: [LoggerService, DatabaseUserRepository],
-          provide: UsecasesProxyModule.GET_ALL_USER_USECASES_PROXY,
+          provide: UsecasesProxyModule.GET_USERS_USECASES_PROXY,
           useFactory: (
             logger: LoggerService,
             userRepository: DatabaseUserRepository,
-          ) => {
-            new UseCaseProxy(new GetAllUsersCases(logger, userRepository));
-          },
+          ) => new UseCaseProxy(new GetUsersCases(logger, userRepository)),
         },
         // ADD USER AND AUTH
         {
@@ -88,6 +89,7 @@ export class UsecasesProxyModule {
             DatabaseAuthRepository,
             AuthService,
             EmailService,
+            AWSService,
           ],
           provide: UsecasesProxyModule.POST_USER_USECASES_PROXY,
           useFactory: (
@@ -97,6 +99,7 @@ export class UsecasesProxyModule {
             authRepository: DatabaseAuthRepository,
             authService: AuthService,
             emailService: EmailService,
+            awsService: AWSService,
           ) =>
             new UseCaseProxy(
               new AddUserCases(
@@ -106,6 +109,7 @@ export class UsecasesProxyModule {
                 authRepository,
                 authService,
                 emailService,
+                awsService,
               ),
             ),
         },
@@ -162,15 +166,28 @@ export class UsecasesProxyModule {
             logger: LoggerService,
           ) => new UseCaseProxy(new GetProductsUsecases(productRepo, logger)),
         },
+        {
+          inject: [DatabaseProductRepository, LoggerService, AWSService],
+          provide: UsecasesProxyModule.ADD_PRODUCTS_USECASES_PROXY,
+          useFactory: (
+            productRepo: DatabaseProductRepository,
+            logger: LoggerService,
+            awsService: AWSService,
+          ) =>
+            new UseCaseProxy(
+              new AddProductUsecases(productRepo, logger, awsService),
+            ),
+        },
       ],
       exports: [
         UsecasesProxyModule.GET_USER_USECASES_PROXY,
-        UsecasesProxyModule.GET_ALL_USER_USECASES_PROXY,
+        UsecasesProxyModule.GET_USERS_USECASES_PROXY,
         UsecasesProxyModule.POST_USER_USECASES_PROXY,
         UsecasesProxyModule.LOGIN_USECASES_PROXY,
         UsecasesProxyModule.LOGOUT_USECASES_PROXY,
         UsecasesProxyModule.GET_PRODUCT_USECASES_PROXY,
         UsecasesProxyModule.GET_PRODUCTS_USECASES_PROXY,
+        UsecasesProxyModule.ADD_PRODUCTS_USECASES_PROXY,
       ],
     };
   }
