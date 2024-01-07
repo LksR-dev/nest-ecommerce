@@ -16,6 +16,8 @@ export class ProductPresenter {
   @ApiProperty()
   user: UserM;
   @ApiProperty()
+  unable: boolean;
+  @ApiProperty()
   createddate: Date;
   @ApiProperty()
   updateddate: Date;
@@ -30,6 +32,7 @@ export class ProductPresenter {
       title,
       updateddate,
       user,
+      unable,
     } = product;
     this.id = id;
     this.title = title;
@@ -37,6 +40,7 @@ export class ProductPresenter {
     this.description = description;
     this.images = images;
     this.user = user;
+    this.unable = unable;
     this.createddate = createddate;
     this.updateddate = updateddate;
   }
