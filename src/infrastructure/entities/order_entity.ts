@@ -5,11 +5,9 @@ import {
   UpdateDateColumn,
   OneToOne,
   JoinColumn,
-  ManyToOne,
   Column,
 } from 'typeorm';
 import { User } from './user_entity';
-import { Product } from './product_entity';
 
 @Entity()
 export class Order {
@@ -22,18 +20,13 @@ export class Order {
   @JoinColumn({ name: 'userId' })
   user: User;
 
-  @ManyToOne(
-    () => Product,
-    (product: Product) => {
-      product.id, product.price;
-    },
-    {
-      cascade: true,
-    },
-  )
-  products: Product[];
+  @Column('float')
+  total_cost: number;
 
-  @Column()
+  @Column('varchar')
+  payment_method: string;
+
+  @Column('varchar')
   status: string;
 
   @CreateDateColumn({ name: 'createdate' })

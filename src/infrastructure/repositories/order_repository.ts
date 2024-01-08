@@ -15,6 +15,14 @@ export class DatabaseOrderRepository implements OrderRepository {
   async insert(productData: OrderM): Promise<OrderM> {
     return await this.orderRepository.save(productData);
   }
+
+  async findByUserId(userId: string): Promise<OrderM[]> {
+    return await this.orderRepository
+      .createQueryBuilder('order')
+      .leftJoinAndSelect('order.user', 'user')
+      .where('user.id = :userId', { userId })
+      .getMany();
+  }
   async findById(id: string): Promise<OrderM> {
     return await this.orderRepository.findOneByOrFail({ id });
   }
