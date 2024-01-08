@@ -4,9 +4,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToOne,
 } from 'typeorm';
-import { User } from './user_entity';
 
 @Entity()
 export class Product {
@@ -24,9 +22,6 @@ export class Product {
 
   @Column('varchar', { array: true })
   images: string[];
-
-  @ManyToOne(() => User, (user) => user.product)
-  user: User;
 
   @Column('boolean', { default: false })
   unable: boolean;

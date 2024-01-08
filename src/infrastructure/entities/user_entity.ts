@@ -4,9 +4,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany,
 } from 'typeorm';
-import { Product } from './product_entity';
 
 @Entity()
 export class User {
@@ -21,9 +19,6 @@ export class User {
 
   @Column('varchar', { nullable: true })
   lastname: string;
-
-  @OneToMany(() => Product, (product) => product.id)
-  product: Product[];
 
   @Column('boolean', { default: false })
   unable: boolean;
