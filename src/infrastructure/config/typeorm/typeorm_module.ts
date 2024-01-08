@@ -6,6 +6,9 @@ import { User } from 'src/infrastructure/entities/user_entity';
 import { Auth } from 'src/infrastructure/entities/auth_entity';
 import { Product } from 'src/infrastructure/entities/product_entity';
 import { Order } from 'src/infrastructure/entities/order_entity';
+import { OrderItems } from 'src/infrastructure/entities/orderItems_entity';
+import { CartItems } from 'src/infrastructure/entities/cartItems_entity';
+import { ShoppingCart } from 'src/infrastructure/entities/shoppingCart_entity';
 
 export const getTypeOrmModuleOptions = (
   config: EnvironmentConfigService,
@@ -17,7 +20,7 @@ export const getTypeOrmModuleOptions = (
     username: config.getDatabaseUser(),
     password: config.getDatabasePassword(),
     database: config.getDatabaseName(),
-    entities: [User, Auth, Product, Order],
+    entities: [User, Auth, Product, Order, OrderItems, CartItems, ShoppingCart],
     schema: process.env.DATABASE_SCHEMA,
     migrationsRun: true,
     migrations: ['dist/migrations/**/*.ts'],
