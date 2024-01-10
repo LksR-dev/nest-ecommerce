@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ProductM } from 'src/domain/models/product';
-import { UserM } from 'src/domain/models/user';
 
 export class ProductPresenter {
   @ApiProperty()
@@ -13,8 +12,6 @@ export class ProductPresenter {
   description: string;
   @ApiProperty()
   images: string[];
-  @ApiProperty()
-  user: UserM;
   @ApiProperty()
   unable: boolean;
   @ApiProperty()
@@ -31,7 +28,6 @@ export class ProductPresenter {
       price,
       title,
       updateddate,
-      user,
       unable,
     } = product;
     this.id = id;
@@ -39,7 +35,6 @@ export class ProductPresenter {
     this.price = price;
     this.description = description;
     this.images = images;
-    this.user = user;
     this.unable = unable;
     this.createddate = createddate;
     this.updateddate = updateddate;
