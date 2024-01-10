@@ -12,11 +12,25 @@ import { DatabaseProductRepository } from './product_repository';
 import { DatabaseAWSRepository } from './aws_repository';
 import { EnvironmentConfigService } from '../config/environment-config/environment_config_service';
 import { LoggerService } from '../logger/logger_service';
+import { DatabaseShoppingCartRepository } from './shoppingCart_repository';
+import { DatabaseCartItemsRepository } from './cartItems_repository';
+import { DatabaseOrderItemsRepository } from './orderItems_repository';
+import { ShoppingCart } from '../entities/shoppingCart_entity';
+import { CartItems } from '../entities/cartItems_entity';
+import { OrderItems } from '../entities/orderItems_entity';
 
 @Module({
   imports: [
     TypeOrmConfigModule,
-    TypeOrmModule.forFeature([User, Auth, Order, Product]),
+    TypeOrmModule.forFeature([
+      User,
+      Auth,
+      Order,
+      Product,
+      ShoppingCart,
+      CartItems,
+      OrderItems,
+    ]),
   ],
   providers: [
     DatabaseUserRepository,
@@ -24,6 +38,9 @@ import { LoggerService } from '../logger/logger_service';
     DatabaseOrderRepository,
     DatabaseProductRepository,
     DatabaseAWSRepository,
+    DatabaseShoppingCartRepository,
+    DatabaseCartItemsRepository,
+    DatabaseOrderItemsRepository,
     EnvironmentConfigService,
     LoggerService,
   ],
@@ -33,6 +50,9 @@ import { LoggerService } from '../logger/logger_service';
     DatabaseOrderRepository,
     DatabaseProductRepository,
     DatabaseAWSRepository,
+    DatabaseShoppingCartRepository,
+    DatabaseCartItemsRepository,
+    DatabaseOrderItemsRepository,
   ],
 })
 export class RepositoriesModule {}

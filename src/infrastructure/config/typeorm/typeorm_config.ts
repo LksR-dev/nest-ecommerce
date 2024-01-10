@@ -20,4 +20,5 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   entities: [User, Auth, Product, Order, OrderItems, CartItems, ShoppingCart],
   synchronize: process.env.NODE_ENV !== 'production',
   logging: true,
+  migrations: ['migrations/**'],
 };

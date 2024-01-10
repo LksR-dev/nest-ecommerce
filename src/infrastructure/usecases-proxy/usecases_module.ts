@@ -20,6 +20,7 @@ import { UseCaseProxy } from './usecases_proxy';
 import { GetProductUsecases } from 'src/usecases/product/getProduct_usecases';
 import { GetProductsUsecases } from 'src/usecases/product/getProducts_usecases';
 import { AddProductUsecases } from 'src/usecases/product/addProduct_usecases';
+import { AddCartItemsUseCases } from 'src/usecases/cartItems/addCartItems_usecases';
 
 // Modules
 import { ExceptionsModule } from '../exceptions/exceptions_module';
@@ -35,6 +36,8 @@ import { EmailService } from '../common/sengrid/sengrid_service';
 import { EnvironmentConfigService } from '../config/environment-config/environment_config_service';
 import { DatabaseProductRepository } from '../repositories/product_repository';
 import { AWSService } from '../services/aws/aws_service';
+import { DatabaseShoppingCartRepository } from '../repositories/shoppingCart_repository';
+import { DatabaseCartItemsRepository } from '../repositories/cartItems_repository';
 
 @Module({
   imports: [
@@ -61,6 +64,9 @@ export class UsecasesProxyModule {
   static GET_PRODUCT_USECASES_PROXY = 'getProductUseCasesProxy';
   static GET_PRODUCTS_USECASES_PROXY = 'getProductsUseCasesProxy';
   static ADD_PRODUCTS_USECASES_PROXY = 'addProductUsecasesProxy';
+
+  // CartItems
+  static POST_CARTITEEMS_USECASES_PROXY = 'postCartItemsUseCasesProxy';
 
   static register(): DynamicModule {
     return {
@@ -90,6 +96,7 @@ export class UsecasesProxyModule {
             AuthService,
             EmailService,
             AWSService,
+            DatabaseShoppingCartRepository,
           ],
           provide: UsecasesProxyModule.POST_USER_USECASES_PROXY,
           useFactory: (
@@ -100,6 +107,7 @@ export class UsecasesProxyModule {
             authService: AuthService,
             emailService: EmailService,
             awsService: AWSService,
+            shoppingCartRepository: DatabaseShoppingCartRepository,
           ) =>
             new UseCaseProxy(
               new AddUserCases(
@@ -110,6 +118,7 @@ export class UsecasesProxyModule {
                 authService,
                 emailService,
                 awsService,
+                shoppingCartRepository,
               ),
             ),
         },
@@ -178,6 +187,30 @@ export class UsecasesProxyModule {
               new AddProductUsecases(productRepo, logger, awsService),
             ),
         },
+        // CARTITEMS
+        {
+          inject: [
+            DatabaseCartItemsRepository,
+            DatabaseShoppingCartRepository,
+            DatabaseProductRepository,
+            LoggerService,
+          ],
+          provide: UsecasesProxyModule.POST_CARTITEEMS_USECASES_PROXY,
+          useFactory: (
+            cartItemsRepository: DatabaseCartItemsRepository,
+            shoppingCartRepository: DatabaseShoppingCartRepository,
+            productRepository: DatabaseProductRepository,
+            logger: LoggerService,
+          ) =>
+            new UseCaseProxy(
+              new AddCartItemsUseCases(
+                cartItemsRepository,
+                shoppingCartRepository,
+                productRepository,
+                logger,
+              ),
+            ),
+        },
       ],
       exports: [
         UsecasesProxyModule.GET_USER_USECASES_PROXY,
@@ -188,6 +221,7 @@ export class UsecasesProxyModule {
         UsecasesProxyModule.GET_PRODUCT_USECASES_PROXY,
         UsecasesProxyModule.GET_PRODUCTS_USECASES_PROXY,
         UsecasesProxyModule.ADD_PRODUCTS_USECASES_PROXY,
+        UsecasesProxyModule.POST_CARTITEEMS_USECASES_PROXY,
       ],
     };
   }

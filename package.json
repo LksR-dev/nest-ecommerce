@@ -19,7 +19,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "NODE_ENV=test jest --config ./jest-e2e.json",
     "orm:init": "npx typeorm-ts-node-esm -d ./src/infrastructure/config/typeorm/typeorm_config.ts",
-    "m:gen:dev": "export NODE_ENV=development && npm run orm:init migration:generate",
+    "m:gen:dev": "export NODE_ENV=development && npm run orm:init migration:generate -d src/infrastructure/config/typeorm_config.ts -n",
     "m:run:dev": "export NODE_ENV=development && npm run orm:init migration:run",
     "m:gen": "export NODE_ENV=production && npm run orm:init migration:generate",
     "m:run": "export NODE_ENV=production && npm run orm:init migration:run"

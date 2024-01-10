@@ -10,4 +10,5 @@ export interface CartItemsRepository {
     quantity: number,
   ): Promise<CartItemsM>;
   deleteItem(shoppingCartId: string, productId: string): Promise<CartItemsM>;
+  createEntity(data: Partial<CartItemsM>): CartItemsM;
 }
