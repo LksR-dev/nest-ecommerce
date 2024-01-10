@@ -1,24 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import AWS, { S3 } from 'aws-sdk';
+import AWS, { S3, SES } from 'aws-sdk';
 import { AWSRepository } from 'src/domain/repositories/aws_repository';
 import { EnvironmentConfigService } from 'src/infrastructure/config/environment-config/environment_config_service';
 import { LoggerService } from '../logger/logger_service';
 
 @Injectable()
 export class DatabaseAWSRepository implements AWSRepository {
-  private SES: AWS.SES;
-  private S3: S3;
   constructor(
     private readonly environmentConfig: EnvironmentConfigService,
     private readonly logger: LoggerService,
+    private readonly s3: S3,
+    private readonly ses: SES,
   ) {
     AWS.config.update({
       region: 'us-east-1',
       accessKeyId: this.environmentConfig.getAWSAccessKeyID(),
       secretAccessKey: this.environmentConfig.getAWSSecretAccesKeyID(),
     });
-    this.SES = new AWS.SES();
-    this.S3 = new AWS.S3();
+    this.ses = new AWS.SES();
+    this.s3 = new AWS.S3();
   }
 
   uploadImagesWithS3(params: {
@@ -27,7 +27,7 @@ export class DatabaseAWSRepository implements AWSRepository {
     Body: Buffer;
     ContentType: string;
   }): string {
-    this.S3.putObject(params, (err, data) => {
+    this.s3.upload(params, (err, data) => {
       if (err) {
         this.logger.error('AWS S3 Upload', 'Error to upload files');
       } else {
@@ -45,13 +45,13 @@ export class DatabaseAWSRepository implements AWSRepository {
   async sendEmailWithSES(params: {
     Destination: { ToAddresses: string[] };
     Message: {
-      Body: { Text: { Data: string }; Subject: { Data: string } };
+      Body: { Text: { Data: string } };
       Subject: { Data: string };
     };
     Source: string;
   }): Promise<unknown> {
     const promise = await new Promise((resolve, reject) => {
-      this.SES.sendEmail(params, (err, data) => {
+      this.ses.sendEmail(params, (err, data) => {
         if (err) {
           this.logger.error('AWS SES', `Error to send email, error: ${err}`);
           reject('Error al enviar el correo electrónico');

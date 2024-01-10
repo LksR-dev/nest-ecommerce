@@ -15,6 +15,7 @@ export class ShoppingCart {
 
   @OneToOne(() => User, (user: User) => user.id, {
     cascade: true,
+    nullable: false,
   })
   @JoinColumn({ name: 'userId' })
   user: User;

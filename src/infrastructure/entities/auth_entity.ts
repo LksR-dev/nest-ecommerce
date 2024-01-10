@@ -20,10 +20,10 @@ export class Auth {
   @JoinColumn({ name: 'userId' })
   user: User;
 
-  @Column('varchar', { unique: true })
+  @Column('varchar', { unique: true, nullable: false })
   email: string;
 
-  @Column('varchar', { length: 6 })
+  @Column('varchar', { length: 6, nullable: false })
   code: string;
 
   @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })

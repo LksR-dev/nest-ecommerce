@@ -53,4 +53,13 @@ export class DatabaseCartItemsRepository implements CartItemsRepository {
     });
     return cartItemsDeleted.raw;
   }
+
+  createEntity(data: Partial<CartItemsM>): CartItemsM {
+    const { shoppingCart, product, productQuantity } = data;
+    const cartItems = new CartItemsM();
+    cartItems.product = product;
+    cartItems.productQuantity = productQuantity;
+    cartItems.shoppingCart = shoppingCart;
+    return cartItems;
+  }
 }

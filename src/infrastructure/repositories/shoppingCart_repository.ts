@@ -12,17 +12,30 @@ export class DatabaseShoppingCartRepository implements ShoppingCartRepository {
     private readonly shoppingCartRepository: Repository<ShoppingCart>,
   ) {}
 
-  async insert(shoppingCartData: ShoppingCart): Promise<ShoppingCart> {
-    return await this.shoppingCartRepository.save(shoppingCartData);
+  async upsertByUserId(
+    shoppingCartData: Partial<ShoppingCartM>,
+  ): Promise<ShoppingCartM> {
+    const result = (
+      await this.shoppingCartRepository.upsert(shoppingCartData, ['user'])
+    ).raw[0];
+    return result;
   }
 
   async findByUserId(userId: string): Promise<ShoppingCartM> {
-    return await this.shoppingCartRepository.findOneByOrFail({
-      user: { id: userId },
+    return await this.shoppingCartRepository.findOne({
+      where: { user: { id: userId } },
+      relations: ['user'],
     });
   }
 
-  async findById(id: string): Promise<ShoppingCart> {
+  async findById(id: string): Promise<ShoppingCartM> {
     return await this.shoppingCartRepository.findOneByOrFail({ id });
+  }
+
+  createEntity(shoppingCartData: Partial<ShoppingCartM>): ShoppingCartM {
+    const { user } = shoppingCartData;
+    const shoppingCart = new ShoppingCartM();
+    shoppingCart.user = user;
+    return shoppingCart;
   }
 }

@@ -12,15 +12,15 @@ export class DatabaseOrderItemsRepository implements OrderItemsRepository {
     private readonly orderItemsRepository: Repository<OrderItems>,
   ) {}
 
-  async insert(shoppingCartData: OrderItems): Promise<OrderItemsM> {
+  async insert(shoppingCartData: OrderItemsM): Promise<OrderItemsM> {
     return await this.orderItemsRepository.save(shoppingCartData);
   }
 
-  async findById(id: string): Promise<OrderItems> {
+  async findById(id: string): Promise<OrderItemsM> {
     return await this.orderItemsRepository.findOneByOrFail({ id });
   }
 
-  async findByOrderId(orderId: string): Promise<OrderItems[]> {
+  async findByOrderId(orderId: string): Promise<OrderItemsM[]> {
     return await this.orderItemsRepository.findBy({ order: { id: orderId } });
   }
 }

@@ -11,19 +11,19 @@ export class Product {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('varchar')
+  @Column('varchar', { nullable: false })
   title: string;
 
-  @Column('float')
+  @Column('float', { nullable: false })
   price: number;
 
-  @Column('text')
+  @Column('text', { nullable: false })
   description: string;
 
-  @Column('varchar', { array: true })
+  @Column('varchar', { array: true, nullable: false })
   images: string[];
 
-  @Column('boolean', { default: false })
+  @Column('boolean', { default: false, nullable: false })
   unable: boolean;
 
   @CreateDateColumn({ name: 'createdate' })

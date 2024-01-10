@@ -20,10 +20,10 @@ export class User {
   @Column('varchar', { nullable: true })
   lastname: string;
 
-  @Column('boolean', { default: false })
+  @Column('boolean', { default: false, nullable: false })
   unable: boolean;
 
-  @Column('varchar')
+  @Column('varchar', { nullable: false })
   role: 'admin' | 'user';
 
   @CreateDateColumn({ name: 'createdate' })

@@ -27,15 +27,12 @@ export class DatabaseUserRepository implements UserRepository {
   async findOrCreate(
     searchBy: Partial<keyof UserM>,
     userData: UserM,
-  ): Promise<{ user: UserM; userFounded: boolean }> {
+  ): Promise<UserM> {
     const user = await this.userEntityRepository.findOne({
       where: { [searchBy]: userData[searchBy] },
     });
-    if (!user) {
-      const userCreated = await this.insert(userData);
-      return { user: userCreated, userFounded: false };
-    }
-    return { user, userFounded: true };
+    if (!user) return await this.insert(userData);
+    return user;
   }
 
   async deleteById(id: string): Promise<void> {

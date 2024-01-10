@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import AWS from 'aws-sdk';
 import { randomUUID } from 'crypto';
 import { IAWSService } from 'src/domain/services/aws_service';
 import { EnvironmentConfigService } from 'src/infrastructure/config/environment-config/environment_config_service';
@@ -7,29 +6,25 @@ import { DatabaseAWSRepository } from 'src/infrastructure/repositories/aws_repos
 
 @Injectable()
 export class AWSService implements IAWSService {
-  SES: AWS.SES;
   constructor(
     private readonly environmentConfig: EnvironmentConfigService,
     private readonly awsRepository: DatabaseAWSRepository,
-  ) {
-    this.SES = new AWS.SES({
-      region: 'us-east-1',
-      accessKeyId: this.environmentConfig.getAWSAccessKeyID(),
-      secretAccessKey: this.environmentConfig.getAWSSecretAccesKeyID(),
-    });
-  }
-  uploadImages(images: string[]) {
-    return images.map((image: string) => {
-      const buffer = Buffer.from(image, 'base64');
+  ) {}
+
+  async uploadImages(images: string[]) {
+    const uploadPromises = images.map(async (image: string) => {
+      const imageFetched = await fetch(image);
+      const buffer = Buffer.from(await imageFetched.arrayBuffer());
       const name = randomUUID();
       const params = {
         Bucket: this.environmentConfig.getAWSBucketName(),
         Key: name,
         Body: buffer,
-        ContentType: 'image/jpeg',
+        ContentType: 'image/jpg',
       };
       return this.awsRepository.uploadImagesWithS3(params);
     });
+    return Promise.all(uploadPromises);
   }
 
   async sendEmail(
@@ -63,16 +58,7 @@ export class AWSService implements IAWSService {
       },
       Source: this.environmentConfig.getAWSSourceEmail(),
     };
-    const promise = await new Promise((resolve, reject) => {
-      this.SES.sendEmail(params, (err, data) => {
-        if (err) {
-          reject('Error al enviar el correo electrónico');
-        } else {
-          resolve(data);
-        }
-      });
-    });
-    return promise;
+    return await this.awsRepository.sendEmailWithSES(params);
   }
 
   createLoginCodeBodyEmail(code: string) {

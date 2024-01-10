@@ -15,16 +15,20 @@ export class CartItems {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => ShoppingCart, (shoppingCart) => shoppingCart.id)
+  @ManyToOne(() => ShoppingCart, (shoppingCart) => shoppingCart.id, {
+    nullable: false,
+  })
+  @JoinColumn({ name: 'shoppingCartId' })
   shoppingCart: ShoppingCart;
 
   @ManyToOne(() => Product, (product: Product) => product.id, {
     cascade: true,
+    nullable: false,
   })
   @JoinColumn({ name: 'productId' })
   product: Product;
 
-  @Column('int')
+  @Column('int', { nullable: false })
   productQuantity: number;
 
   @CreateDateColumn({ name: 'createdate' })

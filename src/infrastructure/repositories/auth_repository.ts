@@ -18,7 +18,7 @@ export class DatabaseAuthRepository implements AuthRepository {
     return result;
   }
 
-  async updateBy(email: string, authData: Partial<Auth>): Promise<AuthM> {
+  async updateBy(email: string, authData: Partial<AuthM>): Promise<AuthM> {
     return (await this.authEntityRepository.update({ email }, authData)).raw[0];
   }
 

@@ -27,10 +27,10 @@ export class OrderItems {
   @JoinColumn({ name: 'productId' })
   product: Product;
 
-  @Column('float')
+  @Column('float', { nullable: false })
   price_at_purchase: number;
 
-  @Column('int')
+  @Column('int', { nullable: false })
   quantity: number;
 
   @CreateDateColumn({ name: 'createdate' })
