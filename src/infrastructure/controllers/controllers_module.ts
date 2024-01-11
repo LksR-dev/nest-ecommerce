@@ -4,6 +4,7 @@ import { AuthController } from './auth/auth_controller';
 import { UsecasesProxyModule } from '../usecases-proxy/usecases_module';
 import { ProductController } from './product/product_controller';
 import { CartItemsController } from './cartItems/cart_controller';
+import { ShoppingCartController } from './shoppingCart/shoppingCart_controller';
 
 @Module({
   imports: [UsecasesProxyModule.register()],
@@ -12,6 +13,7 @@ import { CartItemsController } from './cartItems/cart_controller';
     AuthController,
     ProductController,
     CartItemsController,
+    ShoppingCartController,
   ],
   providers: [],
 })

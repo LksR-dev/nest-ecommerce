@@ -21,6 +21,8 @@ import { GetProductUsecases } from 'src/usecases/product/getProduct_usecases';
 import { GetProductsUsecases } from 'src/usecases/product/getProducts_usecases';
 import { AddProductUsecases } from 'src/usecases/product/addProduct_usecases';
 import { AddCartItemsUseCases } from 'src/usecases/cartItems/addCartItems_usecases';
+import { GetShoppingCart } from 'src/usecases/shoppingCart/getShoppingCart_usecases';
+import { DeleteProductInShoppingCart } from 'src/usecases/shoppingCart/deletProduct_usecases';
 
 // Modules
 import { ExceptionsModule } from '../exceptions/exceptions_module';
@@ -67,6 +69,11 @@ export class UsecasesProxyModule {
 
   // CartItems
   static POST_CARTITEEMS_USECASES_PROXY = 'postCartItemsUseCasesProxy';
+
+  // ShoppingCart
+  static GET_SHOPPINGCART_USECASES_PROXY = 'getShoppingCartUseCasesProxy';
+  static DELETE_PRODUCT_SHOPPINGCART_USECASES_PROXY =
+    'deleteProductShoppingCartUseCasesProxy';
 
   static register(): DynamicModule {
     return {
@@ -187,7 +194,7 @@ export class UsecasesProxyModule {
               new AddProductUsecases(productRepo, logger, awsService),
             ),
         },
-        // CARTITEMS
+        // CART ITEMS
         {
           inject: [
             DatabaseCartItemsRepository,
@@ -211,6 +218,48 @@ export class UsecasesProxyModule {
               ),
             ),
         },
+        // SHOPPING CART
+        {
+          inject: [
+            DatabaseShoppingCartRepository,
+            DatabaseCartItemsRepository,
+            LoggerService,
+          ],
+          provide: UsecasesProxyModule.GET_SHOPPINGCART_USECASES_PROXY,
+          useFactory: (
+            shoppingCartRepository: DatabaseShoppingCartRepository,
+            cartItemsRepository: DatabaseCartItemsRepository,
+            logger: LoggerService,
+          ) =>
+            new UseCaseProxy(
+              new GetShoppingCart(
+                shoppingCartRepository,
+                cartItemsRepository,
+                logger,
+              ),
+            ),
+        },
+        {
+          inject: [
+            DatabaseShoppingCartRepository,
+            DatabaseCartItemsRepository,
+            LoggerService,
+          ],
+          provide:
+            UsecasesProxyModule.DELETE_PRODUCT_SHOPPINGCART_USECASES_PROXY,
+          useFactory: (
+            shoppingCartRepository: DatabaseShoppingCartRepository,
+            cartItemsRepository: DatabaseCartItemsRepository,
+            logger: LoggerService,
+          ) =>
+            new UseCaseProxy(
+              new DeleteProductInShoppingCart(
+                shoppingCartRepository,
+                cartItemsRepository,
+                logger,
+              ),
+            ),
+        },
       ],
       exports: [
         UsecasesProxyModule.GET_USER_USECASES_PROXY,
@@ -222,6 +271,8 @@ export class UsecasesProxyModule {
         UsecasesProxyModule.GET_PRODUCTS_USECASES_PROXY,
         UsecasesProxyModule.ADD_PRODUCTS_USECASES_PROXY,
         UsecasesProxyModule.POST_CARTITEEMS_USECASES_PROXY,
+        UsecasesProxyModule.GET_SHOPPINGCART_USECASES_PROXY,
+        UsecasesProxyModule.DELETE_PRODUCT_SHOPPINGCART_USECASES_PROXY,
       ],
     };
   }
