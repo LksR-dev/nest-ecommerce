@@ -6,19 +6,19 @@ import { LoggerService } from '../logger/logger_service';
 
 @Injectable()
 export class DatabaseAWSRepository implements AWSRepository {
+  private readonly S3: S3;
+  private readonly SES: SES;
   constructor(
     private readonly environmentConfig: EnvironmentConfigService,
     private readonly logger: LoggerService,
-    private readonly s3: S3,
-    private readonly ses: SES,
   ) {
     AWS.config.update({
       region: 'us-east-1',
       accessKeyId: this.environmentConfig.getAWSAccessKeyID(),
       secretAccessKey: this.environmentConfig.getAWSSecretAccesKeyID(),
     });
-    this.ses = new AWS.SES();
-    this.s3 = new AWS.S3();
+    this.SES = new AWS.SES();
+    this.S3 = new AWS.S3();
   }
 
   uploadImagesWithS3(params: {
@@ -27,7 +27,7 @@ export class DatabaseAWSRepository implements AWSRepository {
     Body: Buffer;
     ContentType: string;
   }): string {
-    this.s3.upload(params, (err, data) => {
+    this.S3.upload(params, (err, data) => {
       if (err) {
         this.logger.error('AWS S3 Upload', 'Error to upload files');
       } else {
@@ -51,7 +51,7 @@ export class DatabaseAWSRepository implements AWSRepository {
     Source: string;
   }): Promise<unknown> {
     const promise = await new Promise((resolve, reject) => {
-      this.ses.sendEmail(params, (err, data) => {
+      this.SES.sendEmail(params, (err, data) => {
         if (err) {
           this.logger.error('AWS SES', `Error to send email, error: ${err}`);
           reject('Error al enviar el correo electrónico');
