@@ -21,11 +21,9 @@ export class CartItemsPresenter {
 
   constructor(cartItem: CartItemsM) {
     const { id, product, productQuantity, shoppingCart } = cartItem;
-    const productId = product.id;
-    const shoppingCartId = shoppingCart.id;
     this.id = id;
-    this.product = { id: productId } as ProductM;
-    this.shoppingCart = { id: shoppingCartId } as ShoppingCartM;
+    this.product = product;
+    this.shoppingCart = shoppingCart;
     this.productQuantity = productQuantity;
   }
 }

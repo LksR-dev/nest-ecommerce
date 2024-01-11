@@ -13,15 +13,27 @@ export class DatabaseCartItemsRepository implements CartItemsRepository {
   ) {}
 
   async insert(cartItemsData: CartItemsM): Promise<CartItemsM> {
-    return await this.cartItemsRepository.save(cartItemsData);
+    const { product, productQuantity, shoppingCart } = cartItemsData;
+    const shoppingCartId = shoppingCart.id;
+    const productId = product.id;
+    const query = `
+      INSERT INTO cart_items ("shoppingCartId", "productId", "productQuantity")
+      VALUES ('${shoppingCartId}', '${productId}', ${productQuantity})
+      ON CONFLICT ("shoppingCartId", "productId")
+      DO UPDATE SET "productQuantity" = cart_items."productQuantity" + ${productQuantity}
+      RETURNING *;
+    `;
+    const result = await this.cartItemsRepository.query(query);
+    return result[0];
   }
 
   async findByShoppingCartId(shoppingCartId: string): Promise<CartItemsM[]> {
-    return await this.cartItemsRepository
-      .createQueryBuilder('cartItems')
-      .leftJoinAndSelect('cartItems.shoppingCart', 'shoppingCart')
-      .where('shoppingCart.id = :shoppingCart', { shoppingCartId })
-      .getMany();
+    return await this.cartItemsRepository.find({
+      where: { shoppingCart: { id: shoppingCartId } },
+      relations: ['product'],
+      cache: 7900,
+      select: ['id', 'product', 'productQuantity'],
+    });
   }
 
   async findById(id: string): Promise<CartItemsM> {
@@ -45,13 +57,16 @@ export class DatabaseCartItemsRepository implements CartItemsRepository {
 
   async deleteItem(
     shoppingCartId: string,
-    productId: string,
-  ): Promise<CartItemsM> {
-    const cartItemsDeleted = await this.cartItemsRepository.delete({
-      shoppingCart: { id: shoppingCartId },
-      product: { id: productId },
-    });
-    return cartItemsDeleted.raw;
+    productsId: string[],
+  ): Promise<number> {
+    const cartItemsDeleted = await this.cartItemsRepository
+      .createQueryBuilder()
+      .delete()
+      .from(CartItems)
+      .where('product.id IN (:...ids)', { ids: productsId })
+      .andWhere('shoppingCart.id = :id', { id: shoppingCartId })
+      .execute();
+    return cartItemsDeleted.affected;
   }
 
   createEntity(data: Partial<CartItemsM>): CartItemsM {

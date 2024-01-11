@@ -6,11 +6,13 @@ import {
   ManyToOne,
   Column,
   JoinColumn,
+  Unique,
 } from 'typeorm';
 import { ShoppingCart } from './shoppingCart_entity';
 import { Product } from './product_entity';
 
 @Entity()
+@Unique(['shoppingCart', 'product'])
 export class CartItems {
   @PrimaryGeneratedColumn('uuid')
   id: string;
