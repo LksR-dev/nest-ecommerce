@@ -15,8 +15,8 @@ export class UserService implements IUserService {
     const { email, name, lastname } = userData;
     const user = new UserM();
     user.email = email;
-    user.name = name;
-    user.lastname = lastname;
+    user.first_name = name;
+    user.last_name = lastname;
     if (email === this.environmentConfig.getAdminEmail()) {
       user.role = 'admin';
     } else {

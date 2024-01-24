@@ -12,13 +12,25 @@ export class User {
   id: string;
 
   @Column('varchar', { nullable: true })
-  name: string;
+  first_name: string;
 
   @Column('varchar', { unique: true, nullable: false })
   email: string;
 
   @Column('varchar', { nullable: true })
-  lastname: string;
+  last_name: string;
+
+  @Column('jsonb', { nullable: true })
+  phone: {
+    area_code: string;
+    number: string;
+  };
+
+  @Column('jsonb', { nullable: true })
+  identification: {
+    type: string;
+    number: string;
+  };
 
   @Column('boolean', { default: false, nullable: false })
   unable: boolean;

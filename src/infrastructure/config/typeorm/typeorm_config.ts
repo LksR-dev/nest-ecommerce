@@ -6,6 +6,7 @@ import { Order } from 'src/infrastructure/entities/order_entity';
 import { OrderItems } from 'src/infrastructure/entities/orderItems_entity';
 import { CartItems } from 'src/infrastructure/entities/cartItems_entity';
 import { ShoppingCart } from 'src/infrastructure/entities/shoppingCart_entity';
+import { Address } from 'src/infrastructure/entities/address_entity';
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
   type: 'postgres',
@@ -17,7 +18,16 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
     process.env.NODE_ENV === 'test'
       ? process.env.DATABASE_NAME_TEST
       : process.env.DATABASE_NAME,
-  entities: [User, Auth, Product, Order, OrderItems, CartItems, ShoppingCart],
+  entities: [
+    User,
+    Auth,
+    Product,
+    Order,
+    OrderItems,
+    CartItems,
+    ShoppingCart,
+    Address,
+  ],
   synchronize: process.env.NODE_ENV !== 'production',
   logging: true,
   migrations: ['migrations/**'],

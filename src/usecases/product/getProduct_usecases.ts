@@ -9,6 +9,7 @@ export class GetProductUsecases {
   ) {}
 
   async execute(id: string): Promise<ProductM> {
+    console.log(id);
     return await this.productRepository.findById(id);
   }
 }

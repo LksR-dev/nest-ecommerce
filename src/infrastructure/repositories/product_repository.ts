@@ -16,6 +16,7 @@ export class DatabaseProductRepository implements ProductRepository {
     return await this.productRepository.save(productData);
   }
   async findById(id: string): Promise<ProductM> {
+    console.log(id);
     return await this.productRepository.findOneByOrFail({ id });
   }
   async update(id: string, productData: Partial<ProductM>): Promise<void> {

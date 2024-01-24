@@ -9,6 +9,16 @@ export class UserPresenter {
   @ApiProperty()
   lastname: string;
   @ApiProperty()
+  phone: {
+    area_code: string;
+    number: string;
+  };
+  @ApiProperty()
+  identification: {
+    type: string;
+    number: string;
+  };
+  @ApiProperty()
   code: string;
   @ApiProperty()
   email: string;
@@ -23,10 +33,12 @@ export class UserPresenter {
 
   constructor(user: UserM) {
     this.id = user.id;
-    this.name = user.name;
-    this.lastname = user.lastname;
+    this.name = user.first_name;
+    this.lastname = user.last_name;
     this.email = user.email;
     this.role = user.role;
+    this.phone = user.phone;
+    this.identification = user.identification;
     this.createdate = user.createddate;
     this.updateddate = user.updateddate;
   }

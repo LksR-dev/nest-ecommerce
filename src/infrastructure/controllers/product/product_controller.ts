@@ -39,6 +39,7 @@ export class ProductController {
   @Get('/:id')
   @ApiResponseType(ProductPresenter, false)
   async getProduct(@Param() getProduct: GetProductDTO): Promise<ProductM> {
+    console.log(getProduct);
     const product = await this.getProductUsecaseProxy
       .getInstance()
       .execute(getProduct.id);
