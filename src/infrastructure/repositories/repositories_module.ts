@@ -18,6 +18,8 @@ import { DatabaseOrderItemsRepository } from './orderItems_repository';
 import { ShoppingCart } from '../entities/shoppingCart_entity';
 import { CartItems } from '../entities/cartItems_entity';
 import { OrderItems } from '../entities/orderItems_entity';
+import { DatabaseAddressRepository } from './address_repository';
+import { Address } from '../entities/address_entity';
 
 @Module({
   imports: [
@@ -30,6 +32,7 @@ import { OrderItems } from '../entities/orderItems_entity';
       ShoppingCart,
       CartItems,
       OrderItems,
+      Address,
     ]),
   ],
   providers: [
@@ -41,6 +44,7 @@ import { OrderItems } from '../entities/orderItems_entity';
     DatabaseShoppingCartRepository,
     DatabaseCartItemsRepository,
     DatabaseOrderItemsRepository,
+    DatabaseAddressRepository,
     EnvironmentConfigService,
     LoggerService,
   ],
@@ -53,6 +57,7 @@ import { OrderItems } from '../entities/orderItems_entity';
     DatabaseShoppingCartRepository,
     DatabaseCartItemsRepository,
     DatabaseOrderItemsRepository,
+    DatabaseAddressRepository,
   ],
 })
 export class RepositoriesModule {}

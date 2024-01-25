@@ -10,9 +10,9 @@ import { UseCaseProxy } from 'src/infrastructure/usecases-proxy/usecases_proxy';
 import { ApiResponseType } from 'src/infrastructure/common/swagger/response_decorator';
 import { LoginDTO } from './auth_dto';
 import { AuthPresenter } from './auth_presenter';
-import { LoginUseCases } from 'src/usecases/auth/login_usecase';
+import { LoginUseCases } from 'src/usecases/auth/login_usecases';
 import { JwtAuthGuard } from 'src/infrastructure/common/guards/jwt_guard';
-import { LogoutUseCases } from 'src/usecases/auth/logout_usecase';
+import { LogoutUseCases } from 'src/usecases/auth/logout_usecases';
 import { Response } from 'express';
 
 @Controller('auth')

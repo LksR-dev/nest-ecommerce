@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { AuthM } from 'src/domain/models/auth';
-import { User } from 'src/infrastructure/entities/user_entity';
+import { UserM } from 'src/domain/models/user';
 
 export class AuthPresenter {
   @ApiProperty()
@@ -10,7 +10,7 @@ export class AuthPresenter {
   @ApiProperty()
   code: string;
   @ApiProperty()
-  user: User;
+  user: UserM;
   @ApiProperty()
   codeExpiresAt: Date;
   @ApiProperty()
