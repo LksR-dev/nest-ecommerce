@@ -8,7 +8,7 @@ export class AddressM {
   city: {
     name: string;
   };
-  zip_code: string;
+  postal_code: string;
   apartment?: {
     number?: number;
     letter?: string;
