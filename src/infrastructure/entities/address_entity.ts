@@ -23,11 +23,11 @@ export class Address {
   @Column('varchar', { unique: true, nullable: false })
   street: string;
 
-  @Column('varchar', { nullable: false })
-  city: string;
+  @Column('int', { unique: true, nullable: false })
+  street_number: number;
 
-  @Column('varchar', { nullable: false })
-  state: string;
+  @Column('jsonb', { nullable: false })
+  city: { name: string };
 
   @Column('varchar', { nullable: false })
   postal_code: string;
