@@ -14,8 +14,9 @@ import { JwtTokenService } from '../services/jwt/jwt_service';
 import { GetUserCases } from 'src/usecases/user/getUser_usecases';
 import { GetUsersCases } from 'src/usecases/user/getAllUsers_usecases';
 import { AddUserCases } from 'src/usecases/user/addUser_usecases';
-import { LoginUseCases } from 'src/usecases/auth/login_usecase';
-import { LogoutUseCases } from 'src/usecases/auth/logout_usecase';
+import { UpdateUserUseCases } from 'src/usecases/user/updateUser_usecases';
+import { LoginUseCases } from 'src/usecases/auth/login_usecases';
+import { LogoutUseCases } from 'src/usecases/auth/logout_usecases';
 import { UseCaseProxy } from './usecases_proxy';
 import { GetProductUsecases } from 'src/usecases/product/getProduct_usecases';
 import { GetProductsUsecases } from 'src/usecases/product/getProducts_usecases';
@@ -23,6 +24,8 @@ import { AddProductUsecases } from 'src/usecases/product/addProduct_usecases';
 import { AddCartItemsUseCases } from 'src/usecases/cartItems/addCartItems_usecases';
 import { GetShoppingCart } from 'src/usecases/shoppingCart/getShoppingCart_usecases';
 import { DeleteProductInShoppingCart } from 'src/usecases/shoppingCart/deletProduct_usecases';
+import { AddAddressUseCases } from 'src/usecases/address/updateAddress_usecases';
+import { GetAddressUseCases } from 'src/usecases/address/getAddress_usecases';
 
 // Modules
 import { ExceptionsModule } from '../exceptions/exceptions_module';
@@ -40,6 +43,7 @@ import { DatabaseProductRepository } from '../repositories/product_repository';
 import { AWSService } from '../services/aws/aws_service';
 import { DatabaseShoppingCartRepository } from '../repositories/shoppingCart_repository';
 import { DatabaseCartItemsRepository } from '../repositories/cartItems_repository';
+import { DatabaseAddressRepository } from '../repositories/address_repository';
 
 @Module({
   imports: [
@@ -57,6 +61,7 @@ export class UsecasesProxyModule {
   static GET_USER_USECASES_PROXY = 'getUserUsecasesProxy';
   static GET_USERS_USECASES_PROXY = 'getUsersUsecasesProxy';
   static POST_USER_USECASES_PROXY = 'postUserUsecasesProxy';
+  static PATCH_USER_USECASES_PROXY = 'patchUserUsecasesProxy';
 
   // Login
   static LOGIN_USECASES_PROXY = 'postLoginUseCasesProxy';
@@ -74,6 +79,10 @@ export class UsecasesProxyModule {
   static GET_SHOPPINGCART_USECASES_PROXY = 'getShoppingCartUseCasesProxy';
   static DELETE_PRODUCT_SHOPPINGCART_USECASES_PROXY =
     'deleteProductShoppingCartUseCasesProxy';
+
+  // Address
+  static ADD_ADDRESS_USECASES_PROXY = 'postAddressUseCasesProxy';
+  static GET_ADDRESS_USECASES_PROXY = 'getAddressUseCasesProxy';
 
   static register(): DynamicModule {
     return {
@@ -127,6 +136,19 @@ export class UsecasesProxyModule {
                 awsService,
                 shoppingCartRepository,
               ),
+            ),
+        },
+        // USER
+        {
+          inject: [DatabaseUserRepository, LoggerService, UserService],
+          provide: UsecasesProxyModule.PATCH_USER_USECASES_PROXY,
+          useFactory: (
+            userRepository: DatabaseUserRepository,
+            logger: LoggerService,
+            userService: UserService,
+          ) =>
+            new UseCaseProxy(
+              new UpdateUserUseCases(userRepository, logger, userService),
             ),
         },
         // LOGIN
@@ -260,11 +282,24 @@ export class UsecasesProxyModule {
               ),
             ),
         },
+        {
+          inject: [DatabaseAddressRepository, LoggerService],
+          provide: UsecasesProxyModule.ADD_ADDRESS_USECASES_PROXY,
+          useFactory: (addressRepository, logger) =>
+            new UseCaseProxy(new AddAddressUseCases(addressRepository, logger)),
+        },
+        {
+          inject: [DatabaseAddressRepository, LoggerService],
+          provide: UsecasesProxyModule.GET_ADDRESS_USECASES_PROXY,
+          useFactory: (addressRepository, logger) =>
+            new UseCaseProxy(new GetAddressUseCases(addressRepository, logger)),
+        },
       ],
       exports: [
         UsecasesProxyModule.GET_USER_USECASES_PROXY,
         UsecasesProxyModule.GET_USERS_USECASES_PROXY,
         UsecasesProxyModule.POST_USER_USECASES_PROXY,
+        UsecasesProxyModule.PATCH_USER_USECASES_PROXY,
         UsecasesProxyModule.LOGIN_USECASES_PROXY,
         UsecasesProxyModule.LOGOUT_USECASES_PROXY,
         UsecasesProxyModule.GET_PRODUCT_USECASES_PROXY,
@@ -273,6 +308,8 @@ export class UsecasesProxyModule {
         UsecasesProxyModule.POST_CARTITEEMS_USECASES_PROXY,
         UsecasesProxyModule.GET_SHOPPINGCART_USECASES_PROXY,
         UsecasesProxyModule.DELETE_PRODUCT_SHOPPINGCART_USECASES_PROXY,
+        UsecasesProxyModule.ADD_ADDRESS_USECASES_PROXY,
+        UsecasesProxyModule.GET_ADDRESS_USECASES_PROXY,
       ],
     };
   }

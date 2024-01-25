@@ -7,16 +7,14 @@ import { EnvironmentConfigService } from 'src/infrastructure/config/environment-
 export class UserService implements IUserService {
   constructor(private readonly environmentConfig: EnvironmentConfigService) {}
 
-  createUser(userData: {
-    email: string;
-    name?: string;
-    lastname?: string;
-  }): UserM {
-    const { email, name, lastname } = userData;
+  createUser(userData: Partial<UserM>): UserM {
+    const { email, first_name, last_name, phone, identification } = userData;
     const user = new UserM();
     user.email = email;
-    user.first_name = name;
-    user.last_name = lastname;
+    user.first_name = first_name;
+    user.last_name = last_name;
+    user.phone = phone;
+    user.identification = identification;
     if (email === this.environmentConfig.getAdminEmail()) {
       user.role = 'admin';
     } else {

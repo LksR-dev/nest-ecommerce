@@ -16,8 +16,8 @@ export class DatabaseUserRepository implements UserRepository {
     return await this.userEntityRepository.save(userData);
   }
 
-  async update(id: string, user: UserM): Promise<void> {
-    await this.userEntityRepository.update({ id }, user);
+  async update(id: string, user: Partial<UserM>): Promise<number> {
+    return (await this.userEntityRepository.update({ id }, user)).affected;
   }
 
   async findById(id: string): Promise<UserM> {

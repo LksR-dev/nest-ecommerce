@@ -6,13 +6,14 @@ import {
   Get,
   UseGuards,
   Req,
+  Patch,
 } from '@nestjs/common';
 import { GetUserCases } from 'src/usecases/user/getUser_usecases';
 import { AddUserCases } from 'src/usecases/user/addUser_usecases';
 import { GetUsersCases } from 'src/usecases/user/getAllUsers_usecases';
 import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserPresenter } from './user_presenter';
-import { AddUserDTO } from './user_dto';
+import { AddUserDTO, UpdateUserDTO } from './user_dto';
 import { Role } from 'src/domain/adapters/role_enum';
 import { UsecasesProxyModule } from 'src/infrastructure/usecases-proxy/usecases_module';
 import { UseCaseProxy } from 'src/infrastructure/usecases-proxy/usecases_proxy';
@@ -20,6 +21,7 @@ import { ApiResponseType } from 'src/infrastructure/common/swagger/response_deco
 import { JwtAuthGuard } from 'src/infrastructure/common/guards/jwt_guard';
 import { Roles } from 'src/infrastructure/common/decorators/role_decorator';
 import { RolesGuard } from 'src/infrastructure/common/guards/role_guards';
+import { UpdateUserUseCases } from 'src/usecases/user/updateUser_usecases';
 
 @Controller('users')
 @ApiTags('users')
@@ -33,6 +35,8 @@ export class UserController {
     private readonly getUsersUsecasesProxy: UseCaseProxy<GetUsersCases>,
     @Inject(UsecasesProxyModule.POST_USER_USECASES_PROXY)
     private readonly addUserUsecasesProxy: UseCaseProxy<AddUserCases>,
+    @Inject(UsecasesProxyModule.PATCH_USER_USECASES_PROXY)
+    private readonly patchUserUsecasesProxy: UseCaseProxy<UpdateUserUseCases>,
   ) {}
 
   @Post('/register')
@@ -59,5 +63,15 @@ export class UserController {
   @ApiResponseType(UserPresenter, true)
   async getUsers() {
     return await this.getUsersUsecasesProxy.getInstance().execute();
+  }
+
+  @Patch()
+  @UseGuards(JwtAuthGuard)
+  @ApiResponseType(UserPresenter, false)
+  async patchUser(@Body() body: UpdateUserDTO, @Req() request: any) {
+    const userId = request.user.id;
+    return await this.patchUserUsecasesProxy
+      .getInstance()
+      .execute(userId, body);
   }
 }
