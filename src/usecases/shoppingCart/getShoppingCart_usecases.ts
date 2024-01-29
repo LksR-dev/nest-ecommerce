@@ -15,11 +15,24 @@ export class GetShoppingCart {
     const cartItemsWithProducts =
       await this.cartItemsRepository.findByShoppingCartId(shoppingCartId);
 
+    const calculateTotalPrice = () => {
+      let totalPrice: number = 0;
+      cartItemsWithProducts.forEach((cart) => {
+        const { productQuantity, product } = cart;
+        const { price } = product;
+        totalPrice += productQuantity * price;
+      });
+      const formattedTotalPrice = totalPrice.toLocaleString('es-ES', {
+        style: 'currency',
+        currency: 'ARS',
+      });
+      return formattedTotalPrice;
+    };
     this.logger.log(
       'GetShoppingCart Execute',
       'The shoppingcart getting succesfully',
     );
 
-    return cartItemsWithProducts;
+    return { cartItemsWithProducts, totalPrice: calculateTotalPrice() };
   }
 }

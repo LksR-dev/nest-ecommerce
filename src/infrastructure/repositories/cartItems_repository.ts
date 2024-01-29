@@ -32,7 +32,7 @@ export class DatabaseCartItemsRepository implements CartItemsRepository {
       where: { shoppingCart: { id: shoppingCartId } },
       relations: ['product'],
       cache: 7900,
-      select: ['id', 'product', 'productQuantity'],
+      select: ['product', 'productQuantity'],
     });
   }
 

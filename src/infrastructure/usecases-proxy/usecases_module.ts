@@ -26,6 +26,7 @@ import { GetShoppingCart } from 'src/usecases/shoppingCart/getShoppingCart_useca
 import { DeleteProductInShoppingCart } from 'src/usecases/shoppingCart/deletProduct_usecases';
 import { AddAddressUseCases } from 'src/usecases/address/updateAddress_usecases';
 import { GetAddressUseCases } from 'src/usecases/address/getAddress_usecases';
+import { AddOrderUsecases } from 'src/usecases/order/addOrder_usecases';
 
 // Modules
 import { ExceptionsModule } from '../exceptions/exceptions_module';
@@ -44,6 +45,8 @@ import { AWSService } from '../services/aws/aws_service';
 import { DatabaseShoppingCartRepository } from '../repositories/shoppingCart_repository';
 import { DatabaseCartItemsRepository } from '../repositories/cartItems_repository';
 import { DatabaseAddressRepository } from '../repositories/address_repository';
+import { DatabaseOrderRepository } from '../repositories/order_repository';
+import { DatabaseOrderItemsRepository } from '../repositories/orderItems_repository';
 
 @Module({
   imports: [
@@ -83,6 +86,9 @@ export class UsecasesProxyModule {
   // Address
   static ADD_ADDRESS_USECASES_PROXY = 'postAddressUseCasesProxy';
   static GET_ADDRESS_USECASES_PROXY = 'getAddressUseCasesProxy';
+
+  // Order
+  static ADD_ORDER_USECASES_PROXY = 'postOrderUseCasesProxy';
 
   static register(): DynamicModule {
     return {
@@ -291,8 +297,32 @@ export class UsecasesProxyModule {
         {
           inject: [DatabaseAddressRepository, LoggerService],
           provide: UsecasesProxyModule.GET_ADDRESS_USECASES_PROXY,
-          useFactory: (addressRepository, logger) =>
+          useFactory: (
+            addressRepository: DatabaseAddressRepository,
+            logger: LoggerService,
+          ) =>
             new UseCaseProxy(new GetAddressUseCases(addressRepository, logger)),
+        },
+        // ORDER
+        {
+          inject: [
+            DatabaseOrderRepository,
+            DatabaseOrderItemsRepository,
+            LoggerService,
+          ],
+          provide: UsecasesProxyModule.ADD_ORDER_USECASES_PROXY,
+          useFactory: (
+            orderRepository: DatabaseOrderRepository,
+            orderItemsRepository: DatabaseOrderItemsRepository,
+            logger: LoggerService,
+          ) =>
+            new UseCaseProxy(
+              new AddOrderUsecases(
+                orderRepository,
+                orderItemsRepository,
+                logger,
+              ),
+            ),
         },
       ],
       exports: [
@@ -310,6 +340,7 @@ export class UsecasesProxyModule {
         UsecasesProxyModule.DELETE_PRODUCT_SHOPPINGCART_USECASES_PROXY,
         UsecasesProxyModule.ADD_ADDRESS_USECASES_PROXY,
         UsecasesProxyModule.GET_ADDRESS_USECASES_PROXY,
+        UsecasesProxyModule.ADD_ORDER_USECASES_PROXY,
       ],
     };
   }
