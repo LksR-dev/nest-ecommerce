@@ -6,6 +6,7 @@ import { ProductController } from './product/product_controller';
 import { CartItemsController } from './cartItems/cart_controller';
 import { ShoppingCartController } from './shoppingCart/shoppingCart_controller';
 import { AddressController } from './address/address_controller';
+import { OrderController } from './order/order_controller';
 
 @Module({
   imports: [UsecasesProxyModule.register()],
@@ -16,6 +17,7 @@ import { AddressController } from './address/address_controller';
     CartItemsController,
     ShoppingCartController,
     AddressController,
+    OrderController,
   ],
   providers: [],
 })
