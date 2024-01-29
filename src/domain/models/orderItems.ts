@@ -10,3 +10,11 @@ export class OrderItemsM {
   createddate: Date;
   updateddate: Date;
 }
+
+export class ProductOrderItemData {
+  product: {
+    id: string;
+    price: number;
+  };
+  productQuantity: number;
+}

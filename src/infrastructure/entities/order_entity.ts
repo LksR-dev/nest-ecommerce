@@ -27,7 +27,7 @@ export class Order {
   @Column('varchar', { nullable: false })
   payment_method: string;
 
-  @Column('varchar', { nullable: false })
+  @Column('varchar', { nullable: false, default: 'pending' })
   status: string;
 
   @CreateDateColumn({ name: 'createdate' })
