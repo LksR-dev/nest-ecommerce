@@ -7,6 +7,8 @@ import { AWSService } from './aws/aws_service';
 import { EnvironmentConfigService } from '../config/environment-config/environment_config_service';
 import { DatabaseAWSRepository } from '../repositories/aws_repository';
 import { LoggerService } from '../logger/logger_service';
+import { MercadoPagoService } from './mercadopago/mercado_pago_service';
+import { Payment, Preference } from 'mercadopago';
 
 @Module({
   imports: [
@@ -14,7 +16,7 @@ import { LoggerService } from '../logger/logger_service';
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: '24h' },
     }),
-    // EnvironmentConfigModule,
+    // MercadoPagoModule,
   ],
   providers: [
     AuthService,
@@ -24,7 +26,16 @@ import { LoggerService } from '../logger/logger_service';
     EnvironmentConfigService,
     DatabaseAWSRepository,
     LoggerService,
+    MercadoPagoService,
+    Preference,
+    Payment,
   ],
-  exports: [AuthService, UserService, JwtTokenService, AWSService],
+  exports: [
+    AuthService,
+    UserService,
+    JwtTokenService,
+    AWSService,
+    MercadoPagoService,
+  ],
 })
 export class ServicesModule {}
