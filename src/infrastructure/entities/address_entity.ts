@@ -21,7 +21,7 @@ export class Address {
   user: User;
 
   @Column('varchar', { unique: true, nullable: false })
-  street: string;
+  street_name: string;
 
   @Column('int', { unique: true, nullable: false })
   street_number: number;
@@ -30,7 +30,7 @@ export class Address {
   city: { name: string };
 
   @Column('varchar', { nullable: false })
-  postal_code: string;
+  zip_code: string;
 
   @Column('jsonb', { nullable: false })
   apartment?: { number?: number; letter?: string };

@@ -23,7 +23,7 @@ export class User {
   @Column('jsonb', { nullable: true })
   phone: {
     area_code: string;
-    number: string;
+    number: number;
   };
 
   @Column('jsonb', { nullable: true })
