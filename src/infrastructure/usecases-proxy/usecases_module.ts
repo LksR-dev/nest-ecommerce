@@ -27,18 +27,19 @@ import { DeleteProductInShoppingCart } from 'src/usecases/shoppingCart/deletProd
 import { AddAddressUseCases } from 'src/usecases/address/updateAddress_usecases';
 import { GetAddressUseCases } from 'src/usecases/address/getAddress_usecases';
 import { AddOrderUsecases } from 'src/usecases/order/addOrder_usecases';
+import { UpdateOrderStatus } from 'src/usecases/order/updateOrder_status_usecases';
 
 // Modules
 import { ExceptionsModule } from '../exceptions/exceptions_module';
 import { LoggerModule } from '../logger/logger_module';
 import { EnvironmentConfigModule } from '../config/environment-config/environment_config_module';
 import { RepositoriesModule } from '../repositories/repositories_module';
-import { SengridModule } from '../common/sengrid/sengrid_module';
+import { SengridModule } from '../services/sengrid/sengrid_module';
 import { JwtModule } from '../services/jwt/jwt_module';
 
 // Services
 import { LoggerService } from '../logger/logger_service';
-import { EmailService } from '../common/sengrid/sengrid_service';
+import { EmailService } from '../services/sengrid/sengrid_service';
 import { EnvironmentConfigService } from '../config/environment-config/environment_config_service';
 import { DatabaseProductRepository } from '../repositories/product_repository';
 import { AWSService } from '../services/aws/aws_service';
@@ -47,6 +48,7 @@ import { DatabaseCartItemsRepository } from '../repositories/cartItems_repositor
 import { DatabaseAddressRepository } from '../repositories/address_repository';
 import { DatabaseOrderRepository } from '../repositories/order_repository';
 import { DatabaseOrderItemsRepository } from '../repositories/orderItems_repository';
+import { MercadoPagoService } from '../services/mercadopago/mercado_pago_service';
 
 @Module({
   imports: [
@@ -89,6 +91,7 @@ export class UsecasesProxyModule {
 
   // Order
   static ADD_ORDER_USECASES_PROXY = 'postOrderUseCasesProxy';
+  static PATCH_ORDER_USECASES_PROXY = 'patchOrderUseCasesProxy';
 
   static register(): DynamicModule {
     return {
@@ -308,18 +311,50 @@ export class UsecasesProxyModule {
           inject: [
             DatabaseOrderRepository,
             DatabaseOrderItemsRepository,
+            DatabaseAddressRepository,
+            MercadoPagoService,
             LoggerService,
           ],
           provide: UsecasesProxyModule.ADD_ORDER_USECASES_PROXY,
           useFactory: (
             orderRepository: DatabaseOrderRepository,
             orderItemsRepository: DatabaseOrderItemsRepository,
+            addressRepository: DatabaseAddressRepository,
+            mercadoPagoService: MercadoPagoService,
             logger: LoggerService,
           ) =>
             new UseCaseProxy(
               new AddOrderUsecases(
                 orderRepository,
                 orderItemsRepository,
+                mercadoPagoService,
+                addressRepository,
+                logger,
+              ),
+            ),
+        },
+        {
+          inject: [
+            DatabaseOrderRepository,
+            DatabaseOrderItemsRepository,
+            MercadoPagoService,
+            EmailService,
+            LoggerService,
+          ],
+          provide: UsecasesProxyModule.PATCH_ORDER_USECASES_PROXY,
+          useFactory: (
+            orderRepository: DatabaseOrderRepository,
+            orderItemsRepository: DatabaseOrderItemsRepository,
+            mercadoPagoService: MercadoPagoService,
+            emailService: EmailService,
+            logger: LoggerService,
+          ) =>
+            new UseCaseProxy(
+              new UpdateOrderStatus(
+                orderRepository,
+                orderItemsRepository,
+                mercadoPagoService,
+                emailService,
                 logger,
               ),
             ),
@@ -341,6 +376,7 @@ export class UsecasesProxyModule {
         UsecasesProxyModule.ADD_ADDRESS_USECASES_PROXY,
         UsecasesProxyModule.GET_ADDRESS_USECASES_PROXY,
         UsecasesProxyModule.ADD_ORDER_USECASES_PROXY,
+        UsecasesProxyModule.PATCH_ORDER_USECASES_PROXY,
       ],
     };
   }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { OrderM } from 'src/domain/models/order';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { Order } from '../entities/order_entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OrderRepository } from 'src/domain/repositories/order_repository';
@@ -12,8 +12,8 @@ export class DatabaseOrderRepository implements OrderRepository {
     private readonly orderRepository: Repository<Order>,
   ) {}
 
-  async insert(productData: OrderM): Promise<OrderM> {
-    return await this.orderRepository.save(productData);
+  async insert(orderData: OrderM): Promise<OrderM> {
+    return await this.orderRepository.save(orderData);
   }
 
   async findByUserId(userId: string): Promise<OrderM[]> {
@@ -26,7 +26,14 @@ export class DatabaseOrderRepository implements OrderRepository {
   async findById(id: string): Promise<OrderM> {
     return await this.orderRepository.findOneByOrFail({ id });
   }
-  async update(id: string, productData: Partial<OrderM>): Promise<void> {
-    await this.orderRepository.update({ id }, productData);
+  async update(id: string, orderData: Partial<OrderM>): Promise<any> {
+    const updateResult: UpdateResult = await this.orderRepository
+      .createQueryBuilder()
+      .update(Order)
+      .set(orderData)
+      .where('id = :id', { id })
+      .returning(['id'])
+      .execute();
+    return updateResult.raw[0];
   }
 }

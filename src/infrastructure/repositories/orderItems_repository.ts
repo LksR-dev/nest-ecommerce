@@ -22,8 +22,14 @@ export class DatabaseOrderItemsRepository implements OrderItemsRepository {
     return await this.orderItemsRepository.findOneByOrFail({ id });
   }
 
-  async findByOrderId(orderId: string): Promise<OrderItemsM[]> {
-    return await this.orderItemsRepository.findBy({ order: { id: orderId } });
+  async findByOrderIdWithProducts(orderId: string): Promise<OrderItems[]> {
+    const query = this.orderItemsRepository
+      .createQueryBuilder('orderItems')
+      .leftJoinAndSelect('orderItems.product', 'product')
+      .where('orderItems.orderId = :orderId', { orderId })
+      .getMany();
+
+    return query;
   }
 
   createEntity(
