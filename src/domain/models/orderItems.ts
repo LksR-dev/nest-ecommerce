@@ -15,6 +15,7 @@ export class ProductOrderItemData {
   product: {
     id: string;
     price: number;
+    title: string;
   };
   productQuantity: number;
 }

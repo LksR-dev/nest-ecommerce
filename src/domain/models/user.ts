@@ -5,7 +5,7 @@ export class UserM {
   email: string;
   phone: {
     area_code: string;
-    number: string;
+    number: number;
   };
   identification: {
     type: string;

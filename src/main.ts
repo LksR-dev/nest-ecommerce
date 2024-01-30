@@ -35,6 +35,7 @@ async function bootstrap() {
   //Swagger config
   if (env !== 'production') {
     const config = new DocumentBuilder()
+      .addCookieAuth()
       .addBearerAuth()
       .setTitle('ecommerce')
       .setDescription('ecommerce')

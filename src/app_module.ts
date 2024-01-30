@@ -6,7 +6,7 @@ import { ExceptionsModule } from './infrastructure/exceptions/exceptions_module'
 import { LoggerModule } from './infrastructure/logger/logger_module';
 import { typeOrmConfig } from './infrastructure/config/typeorm/typeorm_config';
 import { UsecasesProxyModule } from './infrastructure/usecases-proxy/usecases_module';
-import { SengridModule } from './infrastructure/common/sengrid/sengrid_module';
+import { SengridModule } from './infrastructure/services/sengrid/sengrid_module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule as JwtServiceModule } from './infrastructure/services/jwt/jwt_module';
 import { JwtModule } from '@nestjs/jwt';
