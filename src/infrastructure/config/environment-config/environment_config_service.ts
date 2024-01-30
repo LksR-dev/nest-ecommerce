@@ -19,6 +19,7 @@ interface EnvironmentVariables {
   AWS_SOURCE_EMAIL: string;
   AWS_BUCKET_NAME: string;
   ADMIN_EMAIL: string;
+  MERCADO_PAGO_ACCESS_TOKEN: string;
 }
 
 @Injectable()
@@ -67,5 +68,8 @@ export class EnvironmentConfigService
   }
   getAdminEmail(): string {
     return this.configService.get<string>('ADMIN_EMAIL');
+  }
+  getMercadoPagoAccessToken(): string {
+    return this.configService.get<string>('MERCADO_PAGO_ACCESS_TOKEN');
   }
 }
