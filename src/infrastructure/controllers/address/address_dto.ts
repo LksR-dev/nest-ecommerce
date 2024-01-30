@@ -32,7 +32,7 @@ export class AddAddressDTO {
   @ApiProperty({ required: true })
   @IsNotEmpty()
   @IsString()
-  readonly street: string;
+  readonly street_name: string;
 
   @ApiProperty({ required: true })
   @IsNotEmpty()
@@ -55,5 +55,5 @@ export class AddAddressDTO {
   @ApiProperty({ required: true })
   @IsNotEmpty()
   @IsString()
-  readonly postal_code: string;
+  readonly zip_code: string;
 }

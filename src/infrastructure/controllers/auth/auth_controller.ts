@@ -1,5 +1,6 @@
 import { Controller, Inject, Post, Body, UseGuards, Res } from '@nestjs/common';
 import {
+  ApiCookieAuth,
   ApiExtraModels,
   ApiOperation,
   ApiResponse,
@@ -17,6 +18,14 @@ import { Response } from 'express';
 
 @Controller('auth')
 @ApiTags('auth')
+@ApiResponse({
+  status: 201,
+  description: 'The auth has been successfully created.',
+})
+@ApiResponse({
+  status: 200,
+  description: 'The auth has been successfully obtained.',
+})
 @ApiResponse({ status: 500, description: 'Internal error' })
 @ApiExtraModels(AuthPresenter)
 export class AuthController {
@@ -48,6 +57,7 @@ export class AuthController {
   }
 
   @Post('logout')
+  @ApiCookieAuth()
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ description: 'logout' })
   async logout(@Res() response: Response) {

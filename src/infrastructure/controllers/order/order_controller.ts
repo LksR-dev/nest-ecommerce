@@ -1,5 +1,10 @@
 import { Body, Controller, Inject, Post, Req, UseGuards } from '@nestjs/common';
-import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiCookieAuth,
+  ApiExtraModels,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { OrderPresenter } from './order_presenter';
 import { UseCaseProxy } from 'src/infrastructure/usecases-proxy/usecases_proxy';
 import { UsecasesProxyModule } from 'src/infrastructure/usecases-proxy/usecases_module';
@@ -10,6 +15,14 @@ import { AddOrderUsecases } from 'src/usecases/order/addOrder_usecases';
 @ApiTags('orders')
 @Controller('orders')
 @ApiExtraModels(OrderPresenter)
+@ApiResponse({
+  status: 201,
+  description: 'The order has been successfully created.',
+})
+@ApiResponse({
+  status: 200,
+  description: 'The order has been successfully obtained.',
+})
 @ApiResponse({ status: 500, description: 'Internal error' })
 export class OrderController {
   constructor(
@@ -17,6 +30,7 @@ export class OrderController {
     private readonly addOrderProxy: UseCaseProxy<AddOrderUsecases>,
   ) {}
 
+  @ApiCookieAuth()
   @UseGuards(JwtAuthGuard)
   @Post()
   async addCartItems(@Body() body: AddOrderDTO, @Req() request: any) {

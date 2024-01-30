@@ -7,7 +7,12 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiCookieAuth,
+  ApiExtraModels,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ShoppingCartPresenter } from './shoppingCart_presenter';
 import { UseCaseProxy } from 'src/infrastructure/usecases-proxy/usecases_proxy';
 import { UsecasesProxyModule } from 'src/infrastructure/usecases-proxy/usecases_module';
@@ -19,6 +24,14 @@ import { DeleteProductInShoppingCart } from 'src/usecases/shoppingCart/deletProd
 @ApiTags('shoppingCart')
 @Controller('shoppingCart')
 @ApiExtraModels(ShoppingCartPresenter)
+@ApiResponse({
+  status: 201,
+  description: 'The shoppingCart has been successfully created.',
+})
+@ApiResponse({
+  status: 200,
+  description: 'The shoppingCart has been successfully obtained.',
+})
 @ApiResponse({ status: 500, description: 'Internal error' })
 export class ShoppingCartController {
   constructor(
@@ -28,6 +41,7 @@ export class ShoppingCartController {
     private readonly deleteProductOnShoppingCartUseCasesProxy: UseCaseProxy<DeleteProductInShoppingCart>,
   ) {}
 
+  @ApiCookieAuth()
   @UseGuards(JwtAuthGuard)
   @Get()
   async getMyShoppingCart(@Req() request: any) {
@@ -37,6 +51,7 @@ export class ShoppingCartController {
       .execute(userId);
   }
 
+  @ApiCookieAuth()
   @UseGuards(JwtAuthGuard)
   @Delete()
   async deleteProducts(@Body() body: ClearShoppingCart, @Req() request: any) {

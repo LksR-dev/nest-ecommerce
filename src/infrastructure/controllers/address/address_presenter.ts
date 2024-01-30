@@ -16,7 +16,7 @@ export class AddressPresenter {
     name: string;
   };
   @ApiProperty()
-  postal_code: string;
+  zip_code: string;
   @ApiProperty()
   apartment?: {
     number?: number;
@@ -31,8 +31,8 @@ export class AddressPresenter {
     const {
       id,
       city,
-      postal_code,
-      street,
+      zip_code,
+      street_name,
       street_number,
       apartment,
       createddate,
@@ -41,8 +41,8 @@ export class AddressPresenter {
     } = address;
     this.id = id;
     this.city = city;
-    this.postal_code = postal_code;
-    this.street = street;
+    this.zip_code = zip_code;
+    this.street = street_name;
     this.street_number = street_number;
     this.apartment = apartment;
     this.user = user;

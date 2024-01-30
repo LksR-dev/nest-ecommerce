@@ -11,7 +11,12 @@ import {
 import { GetUserCases } from 'src/usecases/user/getUser_usecases';
 import { AddUserCases } from 'src/usecases/user/addUser_usecases';
 import { GetUsersCases } from 'src/usecases/user/getAllUsers_usecases';
-import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiCookieAuth,
+  ApiExtraModels,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { UserPresenter } from './user_presenter';
 import { AddUserDTO, UpdateUserDTO } from './user_dto';
 import { Role } from 'src/domain/adapters/role_enum';
@@ -25,6 +30,14 @@ import { UpdateUserUseCases } from 'src/usecases/user/updateUser_usecases';
 
 @Controller('users')
 @ApiTags('users')
+@ApiResponse({
+  status: 201,
+  description: 'The user has been successfully created.',
+})
+@ApiResponse({
+  status: 200,
+  description: 'The user has been successfully obtained.',
+})
 @ApiResponse({ status: 500, description: 'Internal error' })
 @ApiExtraModels(UserPresenter)
 export class UserController {
@@ -50,6 +63,7 @@ export class UserController {
 
   @Get('/me')
   @UseGuards(JwtAuthGuard)
+  @ApiCookieAuth()
   @ApiResponseType(UserPresenter, false)
   async getUser(@Req() request: any) {
     const userId = request.user.id;
@@ -60,6 +74,7 @@ export class UserController {
   @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
+  @ApiCookieAuth()
   @ApiResponseType(UserPresenter, true)
   async getUsers() {
     return await this.getUsersUsecasesProxy.getInstance().execute();
@@ -67,6 +82,7 @@ export class UserController {
 
   @Patch()
   @UseGuards(JwtAuthGuard)
+  @ApiCookieAuth()
   @ApiResponseType(UserPresenter, false)
   async patchUser(@Body() body: UpdateUserDTO, @Req() request: any) {
     const userId = request.user.id;

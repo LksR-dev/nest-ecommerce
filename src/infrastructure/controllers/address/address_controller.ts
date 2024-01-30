@@ -7,7 +7,12 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiCookieAuth,
+  ApiExtraModels,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AddressPresenter } from './address_presenter';
 import { UsecasesProxyModule } from 'src/infrastructure/usecases-proxy/usecases_module';
 import { UseCaseProxy } from 'src/infrastructure/usecases-proxy/usecases_proxy';
@@ -19,6 +24,14 @@ import { GetAddressUseCases } from 'src/usecases/address/getAddress_usecases';
 
 @Controller('address')
 @ApiTags('address')
+@ApiResponse({
+  status: 201,
+  description: 'The address has been successfully created.',
+})
+@ApiResponse({
+  status: 200,
+  description: 'The address has been successfully obtained.',
+})
 @ApiResponse({ status: 500, description: 'Internal error' })
 @ApiExtraModels(AddressPresenter)
 export class AddressController {
@@ -30,6 +43,7 @@ export class AddressController {
   ) {}
 
   @Post()
+  @ApiCookieAuth()
   @ApiResponseType(AddressPresenter, false)
   @UseGuards(JwtAuthGuard)
   async add(@Body() body: AddAddressDTO, @Req() request: any) {
@@ -41,6 +55,7 @@ export class AddressController {
   }
 
   @Get()
+  @ApiCookieAuth()
   @ApiResponseType(AddressPresenter, false)
   @UseGuards(JwtAuthGuard)
   async get(@Req() request: any) {

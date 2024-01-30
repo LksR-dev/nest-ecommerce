@@ -7,7 +7,12 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiCookieAuth,
+  ApiExtraModels,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ProductPresenter } from './product_presenter';
 import { AddProductDTO, GetProductDTO } from './product_dto';
 import { ApiResponseType } from 'src/infrastructure/common/swagger/response_decorator';
@@ -24,6 +29,14 @@ import { AddProductUsecases } from 'src/usecases/product/addProduct_usecases';
 
 @Controller('products')
 @ApiTags('products')
+@ApiResponse({
+  status: 201,
+  description: 'The product has been successfully created.',
+})
+@ApiResponse({
+  status: 200,
+  description: 'The product has been successfully obtained.',
+})
 @ApiResponse({ status: 500, description: 'Internal error' })
 @ApiExtraModels(ProductPresenter)
 export class ProductController {
@@ -52,6 +65,7 @@ export class ProductController {
   }
 
   @Post()
+  @ApiCookieAuth()
   @ApiResponseType(ProductPresenter, false)
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)

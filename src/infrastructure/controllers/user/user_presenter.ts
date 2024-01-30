@@ -11,7 +11,7 @@ export class UserPresenter {
   @ApiProperty()
   phone: {
     area_code: string;
-    number: string;
+    number: number;
   };
   @ApiProperty()
   identification: {

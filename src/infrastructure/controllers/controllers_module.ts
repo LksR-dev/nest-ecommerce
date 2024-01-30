@@ -7,6 +7,7 @@ import { CartItemsController } from './cartItems/cart_controller';
 import { ShoppingCartController } from './shoppingCart/shoppingCart_controller';
 import { AddressController } from './address/address_controller';
 import { OrderController } from './order/order_controller';
+import { IPNController } from './ipn/mercado_pago_controller';
 
 @Module({
   imports: [UsecasesProxyModule.register()],
@@ -18,6 +19,7 @@ import { OrderController } from './order/order_controller';
     ShoppingCartController,
     AddressController,
     OrderController,
+    IPNController,
   ],
   providers: [],
 })

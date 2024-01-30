@@ -2,6 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsNotEmpty,
+  IsNumber,
+  IsPositive,
   IsString,
   IsUppercase,
   Length,
@@ -9,17 +11,24 @@ import {
 } from 'class-validator';
 
 export class UserPhoneDTO {
-  @ApiProperty({ required: true })
+  @ApiProperty({
+    required: true,
+    description: `Area code for the user's phone number, for example +11`,
+  })
   @IsNotEmpty()
   @IsString()
   @Length(3, 3)
   area_code: string;
 
-  @ApiProperty({ required: true })
+  @ApiProperty({
+    required: true,
+    description: `User's phone number, for example 4912334950`,
+  })
   @IsNotEmpty()
-  @IsString()
+  @IsNumber()
+  @IsPositive()
   @Length(10, 10)
-  number: string;
+  number: number;
 }
 export class UserIdentificationDTO {
   @ApiProperty({ required: true })
