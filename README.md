@@ -28,7 +28,16 @@
 
 - usecases is like a conductor. It will depend only on domain package to execute business logic. use_cases should not have any dependencies on infrastructure (including framework or npm module).
 
--infrastructure contains all the technical details, configuration, implementations (database, web services, npm module, etc.), and must not contain any business logic. infrastructure has dependencies on domain, use_cases and frameworks.
+- infrastructure contains all the technical details, configuration, implementations (database, web services, npm module, etc.), and must not contain any business logic. infrastructure has dependencies on domain, use_cases and frameworks.
+
+## Technologies and Services
+- Typescript
+- Nest.js
+- Node.js
+- AWS (S3, SES, EC2)
+- Swagger
+- Postgresql
+- TypeORM
 
 ## Installation
 
